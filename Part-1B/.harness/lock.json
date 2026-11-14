@@ -1,0 +1,16 @@
+{
+  "locked_at": "2026-11-14T17:22:56+05:30",
+  "reason": "initial harness + eval dataset before implementation",
+  "files": {
+    ".claude/settings.json": "36f178f5d1958dfc81277b9bb6e3be0335a06945eb605c52ceb778651fc86ecf",
+    ".harness/evaluators/__init__.py": "7ad8e98fb808c3da205f2ae0fb70141e034f92bb6e75822972ccacb019581d65",
+    ".harness/evaluators/properties.py": "d95958edc4a46f929c09d9e450756b4eafbb62e435333ca45f938ca428506f47",
+    ".harness/evaluators/semantic.py": "5693698bce3daa3e509d9814df7c274dc1462bd19631c551fce2a342c9c9f9fa",
+    ".harness/evaluators/structural.py": "76d5630237c21eed6ae809790f93807cbf5174d9f38a966e39eaa8531ff9b742",
+    ".harness/run.py": "8de68aea3abf98bf6942300576b3e4125d7a170c53a63c4ebf247bac90c6e124",
+    "CLAUDE.md": "7178f0efa0a461a176e593f7994b83a43f97206290a3adc18d8acd4e41c428aa",
+    "evals/config.json": "fe18a2943d154449a2c2633b552dc8526215381d511e984403b784fd097dbaaa",
+    "evals/dataset.json": "6ba7ca0d8e54a5b89cd79fd3eec8b78924a5c191ae94783e8c6ee7c228adc203",
+    "evals/output.schema.json": "d31ad064640ca9ac6753799e31d0c4339d0ae6c2ea15ef7b289f96fd39e90aca"
+  }
+}

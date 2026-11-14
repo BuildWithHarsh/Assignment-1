@@ -1,0 +1,1 @@
+- 2026-11-14T17:22:56+05:30 | commit 1c14960 | reason: initial harness + eval dataset before implementation | changed: .claude/settings.json, .harness/evaluators/__init__.py, .harness/evaluators/properties.py, .harness/evaluators/semantic.py, .harness/evaluators/structural.py, .harness/run.py, CLAUDE.md, evals/config.json, evals/dataset.json, evals/output.schema.json
