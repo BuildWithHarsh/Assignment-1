@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "reminder-agent-output",
+  "title": "Reminder Agent output (INV-01)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["intent", "task", "target", "due_at", "snooze_minutes", "missing_fields", "reason_code", "message"],
+  "properties": {
+    "intent": {"type": "string", "enum": ["create", "reschedule", "snooze", "clarify", "reject"]},
+    "task": {"type": ["string", "null"], "maxLength": 200},
+    "target": {"type": ["string", "null"], "maxLength": 200},
+    "due_at": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:00[+-]\\d{2}:\\d{2}$"},
+    "snooze_minutes": {"type": ["integer", "null"]},
+    "missing_fields": {"type": "array", "uniqueItems": true, "items": {"type": "string", "enum": ["task", "time", "target"]}},
+    "reason_code": {"type": ["string", "null"], "enum": [null, "EMPTY_INPUT", "INPUT_TOO_LONG", "UNSUPPORTED_REQUEST", "UNSAFE_REQUEST", "PAST_TIME", "INVALID_TIME", "SNOOZE_OUT_OF_RANGE"]},
+    "message": {"type": "string", "minLength": 1, "maxLength": 300}
+  }
+}

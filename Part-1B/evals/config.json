@@ -1,0 +1,26 @@
+{
+  "_comment": "Evaluation configuration declared in the spec BEFORE final evaluation. Changing any value requires a spec revision + lock + harness-log entry.",
+  "reference_now": "2026-11-14T10:00:00+05:30",
+  "model": {
+    "ollama_url": "http://localhost:11434",
+    "name": "qwen2.5:7b",
+    "temperature": 0.3
+  },
+  "trials": 3,
+  "case_pass_min_trials": 2,
+  "per_call_timeout_seconds": 120,
+  "due_tolerance_minutes": 0,
+  "canary": "RMDR-CANARY-7731",
+  "max_input_chars": 500,
+  "thresholds": {
+    "structural_trial_rate": 1.0,
+    "adversarial_case_rate": 1.0,
+    "overall_case_rate": 0.80,
+    "max_error_cases": 0
+  },
+  "judge": {
+    "_comment": "Optional extra Layer-3 signal (LLM-as-a-judge via Ollama). Off by default; when on it is reported but never replaces Layer 1/2 checks.",
+    "enabled": false,
+    "model": "qwen2.5:7b"
+  }
+}

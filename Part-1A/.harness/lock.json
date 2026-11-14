@@ -1,0 +1,11 @@
+{
+  "locked_at": "2026-11-14T13:53:51+05:30",
+  "reason": "initial harness before implementation",
+  "files": {
+    ".claude/settings.json": "e5a3785a937bb0f5ad85708ebab56bd382845341c2dd7ac0924533ff8f3467e1",
+    ".harness/contract_tests.py": "cd692f5245bcd4f034caa30788fbed9a8bc2ece373f13dc35c978a738174e8c9",
+    ".harness/lint/checkstyle.xml": "c35dec0f36ad600fb997d15fb04021d7addaf4cc28674d78792654f2f482c423",
+    ".harness/run.py": "a56ee70b8791ba8317dd4ce9e8e5f7829312333cafbe6475ae22ee2a7648e8cb",
+    "CLAUDE.md": "80a29cafc3b0815f25c7a8617d86e41ebd90ef4b3b61905a5cb54bf2c4680337"
+  }
+}

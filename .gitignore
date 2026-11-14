@@ -1,0 +1,13 @@
+target/
+**/.harness/tools/
+__pycache__/
+*.pyc
+.env
+.env.*
+.idea/
+*.iml
+.vscode/
+.DS_Store
+# scratch data files from manual CLI testing
+/Part-1A/tasks.json
+/Part-1A/*.tmp

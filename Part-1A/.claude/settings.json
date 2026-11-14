@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "deny": [
+      "Edit(./.harness/**)",
+      "Write(./.harness/**)",
+      "Edit(./evidence/runs/**)",
+      "Write(./evidence/runs/**)",
+      "Edit(./evidence/feedback/**)",
+      "Write(./evidence/feedback/**)",
+      "Edit(./evidence/initial-generation/**)",
+      "Write(./evidence/initial-generation/**)",
+      "Bash(python .harness/run.py lock:*)",
+      "Bash(python3 .harness/run.py lock:*)"
+    ]
+  }
+}
