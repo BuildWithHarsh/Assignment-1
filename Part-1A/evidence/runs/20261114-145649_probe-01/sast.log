@@ -1,0 +1,43 @@
+$ C:\Program Files\apache-maven-3.9.12\bin\mvn.CMD -B com.github.spotbugs:spotbugs-maven-plugin:4.8.6.6:check -Dspotbugs.pluginList=C:\Users\harsh\Desktop\AISDLC Assignment\Assignment-1\Part-1A\.harness\tools\findsecbugs-plugin-1.13.0.jar -Dspotbugs.effort=Max -Dspotbugs.threshold=Low -Dspotbugs.failOnError=true -Dspotbugs.includeTests=false -Dspotbugs.xmlOutput=true
+
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------------< com.atria:todo-cli >-------------------------
+[INFO] Building Smart Todo CLI 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spotbugs:4.8.6.6:check (default-cli) > :spotbugs @ todo-cli >>>
+[INFO] 
+[INFO] --- spotbugs:4.8.6.6:spotbugs (spotbugs) @ todo-cli ---
+[INFO] Fork Value is true
+[INFO] Done SpotBugs Analysis....
+[INFO] 
+[INFO] <<< spotbugs:4.8.6.6:check (default-cli) < :spotbugs @ todo-cli <<<
+[INFO] 
+[INFO] 
+[INFO] --- spotbugs:4.8.6.6:check (default-cli) @ todo-cli ---
+[INFO] BugInstance size is 1
+[INFO] Error size is 0
+[INFO] Total bugs: 1
+[ERROR] High: This API (java/nio/file/Paths.get(Ljava/lang/String;[Ljava/lang/String;)Ljava/nio/file/Path;) reads a file whose location might be specified by user input [com.atria.todo.cli.Main, com.atria.todo.cli.Main, com.atria.todo.cli.Main] At Main.java:[line 35]At Main.java:[line 25]At Main.java:[line 31] PATH_TRAVERSAL_IN
+[INFO] 
+
+
+To see bug detail using the Spotbugs GUI, use the following command "mvn spotbugs:gui"
+
+
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  9.569 s
+[INFO] Finished at: 2026-11-14T14:57:15+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal com.github.spotbugs:spotbugs-maven-plugin:4.8.6.6:check (default-cli) on project todo-cli: failed with 1 bugs and 0 errors -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

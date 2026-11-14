@@ -1,0 +1,34 @@
+$ C:\Program Files\apache-maven-3.9.12\bin\mvn.CMD -B org.jacoco:jacoco-maven-plugin:0.8.12:prepare-agent test org.jacoco:jacoco-maven-plugin:0.8.12:report
+
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------------< com.atria:todo-cli >-------------------------
+[INFO] Building Smart Todo CLI 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (default-cli) @ todo-cli ---
+[INFO] argLine set to "-javaagent:C:\\Users\\harsh\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.12\\org.jacoco.agent-0.8.12-runtime.jar=destfile=C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\jacoco.exec"
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ todo-cli ---
+[INFO] skip non existing resourceDirectory C:\Users\harsh\Desktop\AISDLC Assignment\Assignment-1\Part-1A\src\main\resources
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ todo-cli ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ todo-cli ---
+[INFO] skip non existing resourceDirectory C:\Users\harsh\Desktop\AISDLC Assignment\Assignment-1\Part-1A\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ todo-cli ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.6:test (default-test) @ todo-cli ---
+[INFO] 
+[INFO] --- jacoco:0.8.12:report (default-cli) @ todo-cli ---
+[INFO] Skipping JaCoCo execution due to missing execution data file.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.497 s
+[INFO] Finished at: 2026-11-14T14:57:19+05:30
+[INFO] ------------------------------------------------------------------------

@@ -1,0 +1,68 @@
+$ C:\Users\harsh\AppData\Local\Programs\Python\Python312\python.exe C:\Users\harsh\Desktop\AISDLC Assignment\Assignment-1\Part-1A\.harness\contract_tests.py --jar C:\Users\harsh\Desktop\AISDLC Assignment\Assignment-1\Part-1A\target\todo-cli.jar --out C:\Users\harsh\Desktop\AISDLC Assignment\Assignment-1\Part-1A\evidence\runs\20261114-145649_probe-01\contract-results.json
+
+FAIL  test_ac01_defaults test_ac01_defaults
+        - test raised | expected: "no exception"
+          observed: "AttributeError(\"'list' object has no attribute 'get'\")"
+FAIL  test_ac02_title_validation test_ac02_title_validation
+        - test raised | expected: "no exception"
+          observed: "AttributeError(\"'list' object has no attribute 'get'\")"
+FAIL  test_ac03_priority test_ac03_priority
+        - test raised | expected: "no exception"
+          observed: "AttributeError(\"'list' object has no attribute 'get'\")"
+FAIL  test_ac04_tags test_ac04_tags
+        - test raised | expected: "no exception"
+          observed: "AttributeError(\"'list' object has no attribute 'get'\")"
+FAIL  test_ac05_ids_never_reused test_ac05_ids_never_reused
+        - test raised | expected: "no exception"
+          observed: "AttributeError(\"'list' object has no attribute 'get'\")"
+FAIL  AC-06     missing / malformed ids
+        - get 99 | expected: "exit 4, empty stdout, stderr {\"error\":{\"code\":\"NOT_FOUND\",...}}"
+          observed: {"cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar --data C:\\Users\\harsh\\AppData\\Local\\Temp\\todo-ct-5le8k_q7\\tasks.json get 99", "exit": 0, "stdout": "[]", "stderr": ""}
+        - update 99 | expected: "exit 4, empty stdout, stderr {\"error\":{\"code\":\"NOT_FOUND\",...}}"
+          observed: {"cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar --data C:\\Users\\harsh\\AppData\\Local\\Temp\\todo-ct-5le8k_q7\\tasks.json update 99 --title x", "exit": 0, "stdout": "[]", "stderr": ""}
+        - delete 99 | expected: "exit 4, empty stdout, stderr {\"error\":{\"code\":\"NOT_FOUND\",...}}"
+          observed: {"cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar --data C:\\Users\\harsh\\AppData\\Local\\Temp\\todo-ct-5le8k_q7\\tasks.json delete 99", "exit": 0, "stdout": "[]", "stderr": ""}
+        - move 99 | expected: "exit 4, empty stdout, stderr {\"error\":{\"code\":\"NOT_FOUND\",...}}"
+          observed: {"cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar --data C:\\Users\\harsh\\AppData\\Local\\Temp\\todo-ct-5le8k_q7\\tasks.json move 99 DONE", "exit": 0, "stdout": "[]", "stderr": ""}
+        - non-integer id | expected: "exit 2, empty stdout, stderr {\"error\":{\"code\":\"VALIDATION_ERROR\",...}}"
+          observed: {"cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar --data C:\\Users\\harsh\\AppData\\Local\\Temp\\todo-ct-5le8k_q7\\tasks.json get abc", "exit": 0, "stdout": "[]", "stderr": ""}
+FAIL  test_ac07_partial_update test_ac07_partial_update
+        - test raised | expected: "no exception"
+          observed: "AttributeError(\"'list' object has no attribute 'get'\")"
+FAIL  AC-08     list default order by id
+        - ids ascending | expected: [1, 2, 3, 4]
+          observed: []
+FAIL  AC-09     tag filter case-insensitive
+        - only work-tagged | expected: [2, 3]
+          observed: []
+FAIL  AC-10     status filter
+        - only task 2 | expected: [2]
+          observed: []
+        - unknown status | expected: "exit 2, empty stdout, stderr {\"error\":{\"code\":\"VALIDATION_ERROR\",...}}"
+          observed: {"cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar --data C:\\Users\\harsh\\AppData\\Local\\Temp\\todo-ct-c5viy99u\\tasks.json list --status BLOCKED", "exit": 0, "stdout": "[]", "stderr": ""}
+FAIL  AC-11     priority sort with id tie-break; filters combine
+        - HIGH(2,4) MEDIUM(3) LOW(1) | expected: [2, 4, 3, 1]
+          observed: []
+        - home tasks sorted | expected: [4, 3, 1]
+          observed: []
+FAIL  test_ac12_transitions test_ac12_transitions
+        - test raised | expected: "no exception"
+          observed: "AttributeError(\"'list' object has no attribute 'get'\")"
+FAIL  test_ac13_persistence test_ac13_persistence
+        - test raised | expected: "no exception"
+          observed: "AttributeError(\"'list' object has no attribute 'get'\")"
+PASS  AC-14     missing data file is empty list
+FAIL  AC-15     corrupt file -> STORAGE_ERROR, file untouched
+        - list on corrupt file | expected: "exit 5, empty stdout, stderr {\"error\":{\"code\":\"STORAGE_ERROR\",...}}"
+          observed: {"cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar --data C:\\Users\\harsh\\AppData\\Local\\Temp\\todo-ct-pknp18bp\\tasks.json list", "exit": 0, "stdout": "[]", "stderr": ""}
+        - add on corrupt file | expected: "exit 5, empty stdout, stderr {\"error\":{\"code\":\"STORAGE_ERROR\",...}}"
+          observed: {"cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar --data C:\\Users\\harsh\\AppData\\Local\\Temp\\todo-ct-pknp18bp\\tasks.json add --title x", "exit": 0, "stdout": "[]", "stderr": ""}
+FAIL  AC-16     bad invocations
+        - unknown command | expected: "exit 2, empty stdout, stderr {\"error\":{\"code\":\"VALIDATION_ERROR\",...}}"
+          observed: {"cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar --data C:\\Users\\harsh\\AppData\\Local\\Temp\\todo-ct-4hgsrn9f\\tasks.json frobnicate", "exit": 0, "stdout": "[]", "stderr": ""}
+        - missing --data | expected: "exit 2, empty stdout, stderr {\"error\":{\"code\":\"VALIDATION_ERROR\",...}}"
+          observed: {"cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar list", "exit": 0, "stdout": "[]", "stderr": ""}
+        - unknown option | expected: "exit 2, empty stdout, stderr {\"error\":{\"code\":\"VALIDATION_ERROR\",...}}"
+          observed: {"cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar --data C:\\Users\\harsh\\AppData\\Local\\Temp\\todo-ct-4hgsrn9f\\tasks.json add --title x --colour red", "exit": 0, "stdout": "[]", "stderr": ""}
+PASS  CONST-IV  same commands on same data give same output
+contract tests: 2/17 passed

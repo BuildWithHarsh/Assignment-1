@@ -275,3 +275,44 @@ would pass the build here and fail on a real Java 17 runtime.
 | `ATOMIC_MOVE` unsupported on the dev filesystem | Gate probe, step 1 | Confirm same-directory temp; if it still fails, surface as exit 5 rather than downgrading the guarantee |
 | Clarified behaviours (zero-byte file, fault precedence, repeated options, message wording) are **not** covered by the locked contract suite | Will pass the contract gate even if implemented wrongly | Dedicated unit tests per behaviour; `/speckit-tasks` must create them explicitly |
 | 80% line coverage with 14 small classes | `unit` gate | Error paths are the bulk of the branching; test every `ErrorCode` path, not only happy paths |
+
+### Observed: gate probe `probe-01`, 2026-11-14 (task T006)
+
+Probe jar: `pom.xml` plus a `Main` that reads `--data` and prints `[]`. Gates `integrity` and `build`
+and `lint` passed; `unit` and `contract` failed as expected (no tests, no commands yet).
+
+**R3 / `PATH_TRAVERSAL_IN` — the risk is real and fires.** With the raw `--data` value passed to
+`Paths.get`, FindSecBugs reports exactly one finding at **High** confidence:
+
+```text
+High: This API (java/nio/file/Paths.get(Ljava/lang/String;[Ljava/lang/String;)Ljava/nio/file/Path;)
+reads a file whose location might be specified by user input ... PATH_TRAVERSAL_IN
+```
+
+Four construction shapes were then measured against `spotbugs:check` at effort `Max` / threshold `Low`:
+
+| Shape | Result |
+|---|---|
+| `Paths.get(raw).normalize()` | **Flagged** (control) |
+| `new File(raw).toPath()` | **Flagged** — the `File(String)` constructor is a sink too |
+| Allow-list validation into a `char[]`, then `Paths.get(String.valueOf(buf))` | **Flagged** — `String.valueOf(char[])` keeps the taint |
+| Allow-list validation appending each `char` to a `StringBuilder`, then `Paths.get(sb.toString())` | **Clean — 0 findings** |
+
+Re-verified with the real taint source (`main`'s `String[] args`, which is what produced the High
+finding): **0 bug instances**. So the mitigation is the one R3 named — validate and canonicalise in one
+small method that returns a `Path` — implemented as a per-character allow-list rebuild. Taint does not
+survive the primitive `char` hop into a fresh `StringBuilder`, and the validation is genuine rather than
+cosmetic: it rejects control characters in the path. **No suppression was used or needed.**
+
+Consequence for T022: `ArgParser` owns that one method (`--data` validation is already its
+responsibility per data-model.md), and it returns a `Path`. No other class may call `Paths.get` or
+`new File(...)` on a user-supplied string, or the finding returns.
+
+**R4 / `ATOMIC_MOVE` — usable on this filesystem.** `Files.createTempFile(targetDir, "tasks", ".tmp")`
+followed by `Files.move(tmp, target, ATOMIC_MOVE, REPLACE_EXISTING)` over an **existing** target succeeds
+on Windows 11 / NTFS. The system temp directory happens to be on the same volume on this machine, so a
+cross-volume failure could not be provoked here — which is precisely why the same-directory temp file
+stays mandatory in T019 rather than being treated as a stylistic choice.
+
+**No `DM_EXIT` finding** for `System.exit` in `main`, so the R5 split (`Main` exits, `CliRunner` returns
+a code) carries no SAST cost.

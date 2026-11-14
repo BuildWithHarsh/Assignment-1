@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BugCollection sequence='0' release='' analysisTimestamp='1794648432484' version='4.8.6' timestamp='1794648413177'><Project projectName='Smart Todo CLI'><Jar>C:\Users\harsh\Desktop\AISDLC Assignment\Assignment-1\Part-1A\target\classes</Jar><AuxClasspathEntry>C:\Users\harsh\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.17.1\jackson-databind-2.17.1.jar</AuxClasspathEntry><AuxClasspathEntry>C:\Users\harsh\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.17.1\jackson-annotations-2.17.1.jar</AuxClasspathEntry><AuxClasspathEntry>C:\Users\harsh\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.17.1\jackson-core-2.17.1.jar</AuxClasspathEntry><AuxClasspathEntry>C:\Users\harsh\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.17.1\jackson-datatype-jsr310-2.17.1.jar</AuxClasspathEntry><Plugin id='com.h3xstream.findsecbugs' enabled='true'></Plugin><SrcDir>C:\Users\harsh\Desktop\AISDLC Assignment\Assignment-1\Part-1A\src\main\java</SrcDir><WrkDir>C:\Users\harsh\Desktop\AISDLC Assignment\Assignment-1\Part-1A\target</WrkDir></Project><BugInstance instanceOccurrenceNum='0' instanceHash='3f34fbefb6758798fa3d3e1a528ab927' cweid='22' rank='10' abbrev='SECPTI' category='SECURITY' priority='1' type='PATH_TRAVERSAL_IN' instanceOccurrenceMax='0'><ShortMessage>Potential Path Traversal (file read)</ShortMessage><LongMessage>This API (java/nio/file/Paths.get(Ljava/lang/String;[Ljava/lang/String;)Ljava/nio/file/Path;) reads a file whose location might be specified by user input</LongMessage><Class classname='com.atria.todo.cli.Main' primary='true'><SourceLine classname='com.atria.todo.cli.Main' start='16' end='53' sourcepath='com/atria/todo/cli/Main.java' sourcefile='Main.java'><Message>At Main.java:[lines 16-53]</Message></SourceLine><Message>In class com.atria.todo.cli.Main</Message></Class><Method isStatic='true' classname='com.atria.todo.cli.Main' signature='([Ljava/lang/String;)I' name='probe' primary='true'><SourceLine endBytecode='241' classname='com.atria.todo.cli.Main' start='31' end='43' sourcepath='com/atria/todo/cli/Main.java' sourcefile='Main.java' startBytecode='0'></SourceLine><Message>In method com.atria.todo.cli.Main.probe(String[])</Message></Method><SourceLine endBytecode='16' classname='com.atria.todo.cli.Main' start='35' end='35' sourcepath='com/atria/todo/cli/Main.java' sourcefile='Main.java' startBytecode='16' primary='true'><Message>At Main.java:[line 35]</Message></SourceLine><String role='Sink method' value='java/nio/file/Paths.get(Ljava/lang/String;[Ljava/lang/String;)Ljava/nio/file/Path;'><Message>Sink method java/nio/file/Paths.get(Ljava/lang/String;[Ljava/lang/String;)Ljava/nio/file/Path;</Message></String><String role='Sink parameter' value='1'><Message>Sink parameter 1</Message></String><String role='Unknown source' value='com/atria/todo/cli/Main.dataOption([Ljava/lang/String;)Ljava/lang/String;'><Message>Unknown source com/atria/todo/cli/Main.dataOption([Ljava/lang/String;)Ljava/lang/String;</Message></String><String role='Unknown source' value='com/atria/todo/cli/Main.probe([Ljava/lang/String;)I parameter 0'><Message>Unknown source com/atria/todo/cli/Main.probe([Ljava/lang/String;)I parameter 0</Message></String><String role='Unknown source' value='com/atria/todo/cli/Main.dataOption([Ljava/lang/String;)Ljava/lang/String; parameter 0'><Message>Unknown source com/atria/todo/cli/Main.dataOption([Ljava/lang/String;)Ljava/lang/String; parameter 0</Message></String><String role='Method usage' value='with tainted arguments detected'><Message>Method usage with tainted arguments detected</Message></String><SourceLine endBytecode='1' classname='com.atria.todo.cli.Main' start='25' end='25' sourcepath='com/atria/todo/cli/Main.java' sourcefile='Main.java' startBytecode='1'><Message>At Main.java:[line 25]</Message></SourceLine><SourceLine endBytecode='1' classname='com.atria.todo.cli.Main' start='31' end='31' sourcepath='com/atria/todo/cli/Main.java' sourcefile='Main.java' startBytecode='1'><Message>At Main.java:[line 31]</Message></SourceLine></BugInstance><BugCategory category='SECURITY'><Description>Security</Description></BugCategory><BugPattern cweid='22' abbrev='SECPTI' category='SECURITY' type='PATH_TRAVERSAL_IN'><ShortDescription>Potential Path Traversal (file read)</ShortDescription><Details>
+            
+&lt;p&gt;A file is opened to read its content. The filename comes from an &lt;b&gt;input&lt;/b&gt; parameter.
+If an unfiltered parameter is passed to this file API, files from an arbitrary filesystem location could be read.&lt;/p&gt;
+&lt;p&gt;This rule identifies &lt;b&gt;potential&lt;/b&gt; path traversal vulnerabilities. In many cases, the constructed file path cannot be controlled
+by the user. If that is the case, the reported instance is a false positive.&lt;/p&gt;
+&lt;br/&gt;
+
+&lt;p&gt;
+    &lt;b&gt;Vulnerable Code:&lt;/b&gt;&lt;br/&gt;
+&lt;pre&gt;@GET
+@Path("/images/{image}")
+@Produces("images/*")
+public Response getImage(@javax.ws.rs.PathParam("image") String image) {
+    File file = new File("resources/images/", image); //Weak point
+
+    if (!file.exists()) {
+        return Response.status(Status.NOT_FOUND).build();
+    }
+
+    return Response.ok().entity(new FileInputStream(file)).build();
+}&lt;/pre&gt;
+&lt;/p&gt;
+&lt;br/&gt;
+
+&lt;p&gt;
+    &lt;b&gt;Solution:&lt;/b&gt;&lt;br/&gt;
+&lt;pre&gt;import org.apache.commons.io.FilenameUtils;
+
+@GET
+@Path("/images/{image}")
+@Produces("images/*")
+public Response getImage(@javax.ws.rs.PathParam("image") String image) {
+    File file = new File("resources/images/", FilenameUtils.getName(image)); //Fix
+
+    if (!file.exists()) {
+        return Response.status(Status.NOT_FOUND).build();
+    }
+
+    return Response.ok().entity(new FileInputStream(file)).build();
+}&lt;/pre&gt;
+&lt;/p&gt;
+&lt;br/&gt;
+&lt;p&gt;
+&lt;b&gt;References&lt;/b&gt;&lt;br/&gt;
+&lt;a href="http://projects.webappsec.org/w/page/13246952/Path%20Traversal"&gt;WASC: Path Traversal&lt;/a&gt;&lt;br/&gt;
+&lt;a href="https://www.owasp.org/index.php/Path_Traversal"&gt;OWASP: Path Traversal&lt;/a&gt;&lt;br/&gt;
+&lt;a href="https://capec.mitre.org/data/definitions/126.html"&gt;CAPEC-126: Path Traversal&lt;/a&gt;&lt;br/&gt;
+&lt;a href="https://cwe.mitre.org/data/definitions/22.html"&gt;CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')&lt;/a&gt;
+&lt;/p&gt;
+
+        </Details></BugPattern><BugCode abbrev='SECPTI'><Description>Potential Path Traversal (file read)</Description></BugCode><Errors missingClasses='0' errors='0'></Errors><FindBugsSummary num_packages='1' total_classes='1' priority_1='1' total_size='25' clock_seconds='2.65' referenced_classes='24' vm_version='21.0.12.1+1-LTS' total_bugs='1' java_version='21.0.12.1' gc_seconds='0.01' alloc_mbytes='512.00' cpu_seconds='8.06' peak_mbytes='204.34' timestamp='Sat, 14 Nov 2026 14:56:53 +0530'><FileStats path='com/atria/todo/cli/Main.java' size='25' bugHash='ff68e64f10c65e19795df91e03d2cc52' bugCount='1'></FileStats><PackageStats package='com.atria.todo.cli' priority_1='1' total_bugs='1' total_size='25' total_types='1'><ClassStats bugs='1' size='25' priority_1='1' interface='false' sourceFile='Main.java' class='com.atria.todo.cli.Main'></ClassStats></PackageStats><FindBugsProfile><ClassProfile avgMicrosecondsPerInvocation='701' totalMilliseconds='378' name='edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine' maxMicrosecondsPerInvocation='17835' standardDeviationMicrosecondsPerInvocation='1605' invocations='540'></ClassProfile><ClassProfile avgMicrosecondsPerInvocation='381' totalMilliseconds='207' name='edu.umd.cs.findbugs.classfile.engine.ClassDataAnalysisEngine' maxMicrosecondsPerInvocation='15646' standardDeviationMicrosecondsPerInvocation='726' invocations='543'></ClassProfile><ClassProfile avgMicrosecondsPerInvocation='3481' totalMilliseconds='83' name='edu.umd.cs.findbugs.detect.FieldItemSummary' maxMicrosecondsPerInvocation='13197' standardDeviationMicrosecondsPerInvocation='4127' invocations='24'></ClassProfile><ClassProfile avgMicrosecondsPerInvocation='821' totalMilliseconds='75' name='edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory' maxMicrosecondsPerInvocation='7603' standardDeviationMicrosecondsPerInvocation='1148' invocations='92'></ClassProfile><ClassProfile avgMicrosecondsPerInvocation='15864' totalMilliseconds='63' name='edu.umd.cs.findbugs.classfile.engine.bcel.MethodGenFactory' maxMicrosecondsPerInvocation='61827' standardDeviationMicrosecondsPerInvocation='26536' invocations='4'></ClassProfile><ClassProfile avgMicrosecondsPerInvocation='923' totalMilliseconds='60' name='edu.umd.cs.findbugs.classfile.engine.bcel.JavaClassAnalysisEngine' maxMicrosecondsPerInvocation='26996' standardDeviationMicrosecondsPerInvocation='3494' invocations='65'></ClassProfile><ClassProfile avgMicrosecondsPerInvocation='2290' totalMilliseconds='54' name='edu.umd.cs.findbugs.detect.FindNoSideEffectMethods' maxMicrosecondsPerInvocation='8909' standardDeviationMicrosecondsPerInvocation='2889' invocations='24'></ClassProfile><ClassProfile avgMicrosecondsPerInvocation='85' totalMilliseconds='42' name='edu.umd.cs.findbugs.util.TopologicalSort' maxMicrosecondsPerInvocation='3612' standardDeviationMicrosecondsPerInvocation='223' invocations='500'></ClassProfile><ClassProfile avgMicrosecondsPerInvocation='1438' totalMilliseconds='34' name='edu.umd.cs.findbugs.detect.OverridingEqualsNotSymmetrical' maxMicrosecondsPerInvocation='19968' standardDeviationMicrosecondsPerInvocation='3995' invocations='24'></ClassProfile><ClassProfile avgMicrosecondsPerInvocation='28393' totalMilliseconds='28' name='edu.umd.cs.findbugs.detect.FindDeadLocalStores' maxMicrosecondsPerInvocation='28393' standardDeviationMicrosecondsPerInvocation='0' invocations='1'></ClassProfile><ClassProfile avgMicrosecondsPerInvocation='1084' totalMilliseconds='26' name='edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers' maxMicrosecondsPerInvocation='11491' standardDeviationMicrosecondsPerInvocation='2286' invocations='24'></ClassProfile><ClassProfile avgMicrosecondsPerInvocation='1042' totalMilliseconds='25' name='edu.umd.cs.findbugs.detect.FunctionsThatMightBeMistakenForProcedures' maxMicrosecondsPerInvocation='8843' standardDeviationMicrosecondsPerInvocation='1942' invocations='24'></ClassProfile></FindBugsProfile></FindBugsSummary><ClassFeatures></ClassFeatures><History></History></BugCollection>

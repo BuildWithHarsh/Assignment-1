@@ -1,0 +1,371 @@
+{
+  "label": "probe-01",
+  "timestamp": "2026-11-14T14:56:49+05:30",
+  "commit": "941117e+dirty",
+  "overall": "FAIL",
+  "gates": {
+    "integrity": {
+      "status": "PASS",
+      "details": []
+    },
+    "build": {
+      "status": "PASS",
+      "details": [],
+      "command": "mvn -B -DskipTests clean package"
+    },
+    "lint": {
+      "status": "PASS",
+      "details": [],
+      "violations": 0,
+      "command": "checkstyle:check with .harness/lint/checkstyle.xml"
+    },
+    "sast": {
+      "status": "FAIL",
+      "details": [
+        "[ERROR] High: This API (java/nio/file/Paths.get(Ljava/lang/String;[Ljava/lang/String;)Ljava/nio/file/Path;) reads a file whose location might be specified by user input [com.atria.todo.cli.Main, com.atria.todo.cli.Main, com.atria.todo.cli.Main] At Main.java:[line 35]At Main.java:[line 25]At Main.java:[line 31] PATH_TRAVERSAL_IN"
+      ],
+      "findings": 1,
+      "command": "spotbugs:check + FindSecBugs, effort=Max threshold=Low"
+    },
+    "unit": {
+      "status": "FAIL",
+      "tests": 0,
+      "failed": 0,
+      "skipped": 0,
+      "line_coverage": null,
+      "details": [
+        "No unit tests were executed",
+        "No JaCoCo report produced"
+      ],
+      "command": "jacoco:prepare-agent test jacoco:report (min line coverage 80%)"
+    },
+    "contract": {
+      "status": "FAIL",
+      "passed": 2,
+      "total": 17,
+      "failed_cases": [
+        {
+          "ac": "test_ac01_defaults",
+          "name": "test_ac01_defaults",
+          "passed": false,
+          "failures": [
+            {
+              "assertion": "test raised",
+              "expected": "no exception",
+              "observed": "AttributeError(\"'list' object has no attribute 'get'\")"
+            }
+          ]
+        },
+        {
+          "ac": "test_ac02_title_validation",
+          "name": "test_ac02_title_validation",
+          "passed": false,
+          "failures": [
+            {
+              "assertion": "test raised",
+              "expected": "no exception",
+              "observed": "AttributeError(\"'list' object has no attribute 'get'\")"
+            }
+          ]
+        },
+        {
+          "ac": "test_ac03_priority",
+          "name": "test_ac03_priority",
+          "passed": false,
+          "failures": [
+            {
+              "assertion": "test raised",
+              "expected": "no exception",
+              "observed": "AttributeError(\"'list' object has no attribute 'get'\")"
+            }
+          ]
+        },
+        {
+          "ac": "test_ac04_tags",
+          "name": "test_ac04_tags",
+          "passed": false,
+          "failures": [
+            {
+              "assertion": "test raised",
+              "expected": "no exception",
+              "observed": "AttributeError(\"'list' object has no attribute 'get'\")"
+            }
+          ]
+        },
+        {
+          "ac": "test_ac05_ids_never_reused",
+          "name": "test_ac05_ids_never_reused",
+          "passed": false,
+          "failures": [
+            {
+              "assertion": "test raised",
+              "expected": "no exception",
+              "observed": "AttributeError(\"'list' object has no attribute 'get'\")"
+            }
+          ]
+        },
+        {
+          "ac": "AC-06",
+          "name": "missing / malformed ids",
+          "passed": false,
+          "failures": [
+            {
+              "assertion": "get 99",
+              "expected": "exit 4, empty stdout, stderr {\"error\":{\"code\":\"NOT_FOUND\",...}}",
+              "observed": {
+                "cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar --data C:\\Users\\harsh\\AppData\\Local\\Temp\\todo-ct-5le8k_q7\\tasks.json get 99",
+                "exit": 0,
+                "stdout": "[]",
+                "stderr": ""
+              }
+            },
+            {
+              "assertion": "update 99",
+              "expected": "exit 4, empty stdout, stderr {\"error\":{\"code\":\"NOT_FOUND\",...}}",
+              "observed": {
+                "cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar --data C:\\Users\\harsh\\AppData\\Local\\Temp\\todo-ct-5le8k_q7\\tasks.json update 99 --title x",
+                "exit": 0,
+                "stdout": "[]",
+                "stderr": ""
+              }
+            },
+            {
+              "assertion": "delete 99",
+              "expected": "exit 4, empty stdout, stderr {\"error\":{\"code\":\"NOT_FOUND\",...}}",
+              "observed": {
+                "cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar --data C:\\Users\\harsh\\AppData\\Local\\Temp\\todo-ct-5le8k_q7\\tasks.json delete 99",
+                "exit": 0,
+                "stdout": "[]",
+                "stderr": ""
+              }
+            },
+            {
+              "assertion": "move 99",
+              "expected": "exit 4, empty stdout, stderr {\"error\":{\"code\":\"NOT_FOUND\",...}}",
+              "observed": {
+                "cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar --data C:\\Users\\harsh\\AppData\\Local\\Temp\\todo-ct-5le8k_q7\\tasks.json move 99 DONE",
+                "exit": 0,
+                "stdout": "[]",
+                "stderr": ""
+              }
+            },
+            {
+              "assertion": "non-integer id",
+              "expected": "exit 2, empty stdout, stderr {\"error\":{\"code\":\"VALIDATION_ERROR\",...}}",
+              "observed": {
+                "cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar --data C:\\Users\\harsh\\AppData\\Local\\Temp\\todo-ct-5le8k_q7\\tasks.json get abc",
+                "exit": 0,
+                "stdout": "[]",
+                "stderr": ""
+              }
+            }
+          ]
+        },
+        {
+          "ac": "test_ac07_partial_update",
+          "name": "test_ac07_partial_update",
+          "passed": false,
+          "failures": [
+            {
+              "assertion": "test raised",
+              "expected": "no exception",
+              "observed": "AttributeError(\"'list' object has no attribute 'get'\")"
+            }
+          ]
+        },
+        {
+          "ac": "AC-08",
+          "name": "list default order by id",
+          "passed": false,
+          "failures": [
+            {
+              "assertion": "ids ascending",
+              "expected": [
+                1,
+                2,
+                3,
+                4
+              ],
+              "observed": []
+            }
+          ]
+        },
+        {
+          "ac": "AC-09",
+          "name": "tag filter case-insensitive",
+          "passed": false,
+          "failures": [
+            {
+              "assertion": "only work-tagged",
+              "expected": [
+                2,
+                3
+              ],
+              "observed": []
+            }
+          ]
+        },
+        {
+          "ac": "AC-10",
+          "name": "status filter",
+          "passed": false,
+          "failures": [
+            {
+              "assertion": "only task 2",
+              "expected": [
+                2
+              ],
+              "observed": []
+            },
+            {
+              "assertion": "unknown status",
+              "expected": "exit 2, empty stdout, stderr {\"error\":{\"code\":\"VALIDATION_ERROR\",...}}",
+              "observed": {
+                "cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar --data C:\\Users\\harsh\\AppData\\Local\\Temp\\todo-ct-c5viy99u\\tasks.json list --status BLOCKED",
+                "exit": 0,
+                "stdout": "[]",
+                "stderr": ""
+              }
+            }
+          ]
+        },
+        {
+          "ac": "AC-11",
+          "name": "priority sort with id tie-break; filters combine",
+          "passed": false,
+          "failures": [
+            {
+              "assertion": "HIGH(2,4) MEDIUM(3) LOW(1)",
+              "expected": [
+                2,
+                4,
+                3,
+                1
+              ],
+              "observed": []
+            },
+            {
+              "assertion": "home tasks sorted",
+              "expected": [
+                4,
+                3,
+                1
+              ],
+              "observed": []
+            }
+          ]
+        },
+        {
+          "ac": "test_ac12_transitions",
+          "name": "test_ac12_transitions",
+          "passed": false,
+          "failures": [
+            {
+              "assertion": "test raised",
+              "expected": "no exception",
+              "observed": "AttributeError(\"'list' object has no attribute 'get'\")"
+            }
+          ]
+        },
+        {
+          "ac": "test_ac13_persistence",
+          "name": "test_ac13_persistence",
+          "passed": false,
+          "failures": [
+            {
+              "assertion": "test raised",
+              "expected": "no exception",
+              "observed": "AttributeError(\"'list' object has no attribute 'get'\")"
+            }
+          ]
+        },
+        {
+          "ac": "AC-15",
+          "name": "corrupt file -> STORAGE_ERROR, file untouched",
+          "passed": false,
+          "failures": [
+            {
+              "assertion": "list on corrupt file",
+              "expected": "exit 5, empty stdout, stderr {\"error\":{\"code\":\"STORAGE_ERROR\",...}}",
+              "observed": {
+                "cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar --data C:\\Users\\harsh\\AppData\\Local\\Temp\\todo-ct-pknp18bp\\tasks.json list",
+                "exit": 0,
+                "stdout": "[]",
+                "stderr": ""
+              }
+            },
+            {
+              "assertion": "add on corrupt file",
+              "expected": "exit 5, empty stdout, stderr {\"error\":{\"code\":\"STORAGE_ERROR\",...}}",
+              "observed": {
+                "cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar --data C:\\Users\\harsh\\AppData\\Local\\Temp\\todo-ct-pknp18bp\\tasks.json add --title x",
+                "exit": 0,
+                "stdout": "[]",
+                "stderr": ""
+              }
+            }
+          ]
+        },
+        {
+          "ac": "AC-16",
+          "name": "bad invocations",
+          "passed": false,
+          "failures": [
+            {
+              "assertion": "unknown command",
+              "expected": "exit 2, empty stdout, stderr {\"error\":{\"code\":\"VALIDATION_ERROR\",...}}",
+              "observed": {
+                "cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar --data C:\\Users\\harsh\\AppData\\Local\\Temp\\todo-ct-4hgsrn9f\\tasks.json frobnicate",
+                "exit": 0,
+                "stdout": "[]",
+                "stderr": ""
+              }
+            },
+            {
+              "assertion": "missing --data",
+              "expected": "exit 2, empty stdout, stderr {\"error\":{\"code\":\"VALIDATION_ERROR\",...}}",
+              "observed": {
+                "cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar list",
+                "exit": 0,
+                "stdout": "[]",
+                "stderr": ""
+              }
+            },
+            {
+              "assertion": "unknown option",
+              "expected": "exit 2, empty stdout, stderr {\"error\":{\"code\":\"VALIDATION_ERROR\",...}}",
+              "observed": {
+                "cmd": "java -jar C:\\Users\\harsh\\Desktop\\AISDLC Assignment\\Assignment-1\\Part-1A\\target\\todo-cli.jar --data C:\\Users\\harsh\\AppData\\Local\\Temp\\todo-ct-4hgsrn9f\\tasks.json add --title x --colour red",
+                "exit": 0,
+                "stdout": "[]",
+                "stderr": ""
+              }
+            }
+          ]
+        }
+      ],
+      "details": [
+        "test_ac01_defaults test_ac01_defaults",
+        "test_ac02_title_validation test_ac02_title_validation",
+        "test_ac03_priority test_ac03_priority",
+        "test_ac04_tags test_ac04_tags",
+        "test_ac05_ids_never_reused test_ac05_ids_never_reused",
+        "AC-06 missing / malformed ids",
+        "test_ac07_partial_update test_ac07_partial_update",
+        "AC-08 list default order by id",
+        "AC-09 tag filter case-insensitive",
+        "AC-10 status filter",
+        "AC-11 priority sort with id tie-break; filters combine",
+        "test_ac12_transitions test_ac12_transitions",
+        "test_ac13_persistence test_ac13_persistence",
+        "AC-15 corrupt file -> STORAGE_ERROR, file untouched",
+        "AC-16 bad invocations"
+      ],
+      "command": "python .harness/contract_tests.py (black-box, AC-01..AC-16 + CONST-IV)"
+    }
+  },
+  "env": {
+    "python": "3.12.10",
+    "platform": "win32"
+  }
+}

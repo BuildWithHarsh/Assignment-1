@@ -1,0 +1,17 @@
+$ C:\Program Files\apache-maven-3.9.12\bin\mvn.CMD -B org.apache.maven.plugins:maven-dependency-plugin:3.8.1:copy -Dartifact=com.h3xstream.findsecbugs:findsecbugs-plugin:1.13.0 -DoutputDirectory=C:\Users\harsh\Desktop\AISDLC Assignment\Assignment-1\Part-1A\.harness\tools
+
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------------< com.atria:todo-cli >-------------------------
+[INFO] Building Smart Todo CLI 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- dependency:3.8.1:copy (default-cli) @ todo-cli ---
+[INFO] Configured Artifact: com.h3xstream.findsecbugs:findsecbugs-plugin:1.13.0:jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.782 s
+[INFO] Finished at: 2026-11-14T14:57:03+05:30
+[INFO] ------------------------------------------------------------------------
