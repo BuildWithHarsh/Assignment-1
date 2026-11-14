@@ -1,0 +1,50 @@
+{
+  "label": "run-01",
+  "timestamp": "2026-11-14T17:08:04+05:30",
+  "commit": "ddf7249",
+  "overall": "PASS",
+  "gates": {
+    "integrity": {
+      "status": "PASS",
+      "details": []
+    },
+    "build": {
+      "status": "PASS",
+      "details": [],
+      "command": "mvn -B -DskipTests clean package"
+    },
+    "lint": {
+      "status": "PASS",
+      "details": [],
+      "violations": 0,
+      "command": "checkstyle:check with .harness/lint/checkstyle.xml"
+    },
+    "sast": {
+      "status": "PASS",
+      "details": [],
+      "findings": 0,
+      "command": "spotbugs:check + FindSecBugs, effort=Max threshold=Low"
+    },
+    "unit": {
+      "status": "PASS",
+      "tests": 148,
+      "failed": 0,
+      "skipped": 0,
+      "line_coverage": 0.9563,
+      "details": [],
+      "command": "jacoco:prepare-agent test jacoco:report (min line coverage 80%)"
+    },
+    "contract": {
+      "status": "PASS",
+      "passed": 17,
+      "total": 17,
+      "failed_cases": [],
+      "details": [],
+      "command": "python .harness/contract_tests.py (black-box, AC-01..AC-16 + CONST-IV)"
+    }
+  },
+  "env": {
+    "python": "3.12.10",
+    "platform": "win32"
+  }
+}

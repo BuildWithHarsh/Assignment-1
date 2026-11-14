@@ -225,12 +225,12 @@ into the next invocation; delete a task and confirm it is gone and its id is not
 
 ## Phase 8: Polish & Cross-Cutting Concerns
 
-- [ ] T061 [P] Create `README.md` at the repository root: what the tool does, how to build it, the invocation contract, the six commands, the exit-code table, and the store format. Link to `specs/001-smart-todo-cli/quickstart.md`
-- [ ] T062 Raise JaCoCo line coverage to **≥ 80%**: run `mvn -B org.jacoco:jacoco-maven-plugin:0.8.12:prepare-agent test org.jacoco:jacoco-maven-plugin:0.8.12:report` on the command line only — **do not** add the plugin to `pom.xml` — read `target/site/jacoco/jacoco.csv`, and add unit tests under `src/test/java/com/atria/todo/` for whatever is uncovered. Error paths carry most of the branching, so cover every `ErrorCode` path rather than only happy paths
-- [ ] T063 Commit the generated implementation, tag it, and snapshot it **before** the first full gate run: `git add -A`, `git commit -m "Initial generation from /speckit-implement"`, `git tag initial-generation`, then `python .harness/run.py snapshot initial`
-- [ ] T064 Run the full gate suite: `python .harness/run.py run --label run-01` from the repository root. On failure read the newest report in `evidence/feedback/` and fix the **implementation** — never weaken a test, lower an assertion, add a suppression, or edit anything under `.harness/`. Re-run with the next label (`run-02`, …) until integrity, build, lint, sast, unit and contract are all green
-- [ ] T065 Walk `specs/001-smart-todo-cli/quickstart.md` end to end against the built jar: the walkthrough, the failure-contract checks, the corrupt-file and zero-byte data-safety checks, and the determinism comparison. Treat any surprise here as a real defect even when every gate is green, since four clarified behaviours are invisible to the contract suite
-- [ ] T066 Record the final state: `python .harness/run.py snapshot final`
+- [X] T061 [P] Create `README.md` at the repository root: what the tool does, how to build it, the invocation contract, the six commands, the exit-code table, and the store format. Link to `specs/001-smart-todo-cli/quickstart.md`
+- [X] T062 Raise JaCoCo line coverage to **≥ 80%**: run `mvn -B org.jacoco:jacoco-maven-plugin:0.8.12:prepare-agent test org.jacoco:jacoco-maven-plugin:0.8.12:report` on the command line only — **do not** add the plugin to `pom.xml` — read `target/site/jacoco/jacoco.csv`, and add unit tests under `src/test/java/com/atria/todo/` for whatever is uncovered. Error paths carry most of the branching, so cover every `ErrorCode` path rather than only happy paths
+- [X] T063 Commit the generated implementation, tag it, and snapshot it **before** the first full gate run: `git add -A`, `git commit -m "Initial generation from /speckit-implement"`, `git tag initial-generation`, then `python .harness/run.py snapshot initial`
+- [X] T064 Run the full gate suite: `python .harness/run.py run --label run-01` from the repository root. On failure read the newest report in `evidence/feedback/` and fix the **implementation** — never weaken a test, lower an assertion, add a suppression, or edit anything under `.harness/`. Re-run with the next label (`run-02`, …) until integrity, build, lint, sast, unit and contract are all green
+- [X] T065 Walk `specs/001-smart-todo-cli/quickstart.md` end to end against the built jar: the walkthrough, the failure-contract checks, the corrupt-file and zero-byte data-safety checks, and the determinism comparison. Treat any surprise here as a real defect even when every gate is green, since four clarified behaviours are invisible to the contract suite
+- [X] T066 Record the final state: `python .harness/run.py snapshot final`
 
 ---
 

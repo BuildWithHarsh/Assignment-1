@@ -1,0 +1,19 @@
+$ C:\Program Files\apache-maven-3.9.12\bin\mvn.CMD -B org.apache.maven.plugins:maven-checkstyle-plugin:3.6.0:check -Dcheckstyle.config.location=C:\Users\harsh\Desktop\AISDLC Assignment\Assignment-1\Part-1A\.harness\lint\checkstyle.xml -Dcheckstyle.consoleOutput=true -Dcheckstyle.failOnViolation=true -Dcheckstyle.violationSeverity=warning -Dcheckstyle.includeTestSourceDirectory=false -Dcheckstyle.maxAllowedViolations=0
+
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------------< com.atria:todo-cli >-------------------------
+[INFO] Building Smart Todo CLI 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- checkstyle:3.6.0:check (default-cli) @ todo-cli ---
+[INFO] Starting audit...
+Audit done.
+[INFO] You have 0 Checkstyle violations.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.967 s
+[INFO] Finished at: 2026-11-14T17:08:16+05:30
+[INFO] ------------------------------------------------------------------------

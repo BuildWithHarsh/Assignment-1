@@ -1,0 +1,20 @@
+$ C:\Users\harsh\AppData\Local\Programs\Python\Python312\python.exe C:\Users\harsh\Desktop\AISDLC Assignment\Assignment-1\Part-1A\.harness\contract_tests.py --jar C:\Users\harsh\Desktop\AISDLC Assignment\Assignment-1\Part-1A\target\todo-cli.jar --out C:\Users\harsh\Desktop\AISDLC Assignment\Assignment-1\Part-1A\evidence\runs\20261114-170804_run-01\contract-results.json
+
+PASS  AC-01     add with only --title uses defaults
+PASS  AC-02     title trimming and length validation
+PASS  AC-03     priority parsing
+PASS  AC-04     tag normalisation
+PASS  AC-05     sequential ids, never reused
+PASS  AC-06     missing / malformed ids
+PASS  AC-07     update changes only supplied fields
+PASS  AC-08     list default order by id
+PASS  AC-09     tag filter case-insensitive
+PASS  AC-10     status filter
+PASS  AC-11     priority sort with id tie-break; filters combine
+PASS  AC-12     status transition rules
+PASS  AC-13     persistence across invocations
+PASS  AC-14     missing data file is empty list
+PASS  AC-15     corrupt file -> STORAGE_ERROR, file untouched
+PASS  AC-16     bad invocations
+PASS  CONST-IV  same commands on same data give same output
+contract tests: 17/17 passed

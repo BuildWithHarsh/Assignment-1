@@ -1,0 +1,31 @@
+$ C:\Program Files\apache-maven-3.9.12\bin\mvn.CMD -B com.github.spotbugs:spotbugs-maven-plugin:4.8.6.6:check -Dspotbugs.pluginList=C:\Users\harsh\Desktop\AISDLC Assignment\Assignment-1\Part-1A\.harness\tools\findsecbugs-plugin-1.13.0.jar -Dspotbugs.effort=Max -Dspotbugs.threshold=Low -Dspotbugs.failOnError=true -Dspotbugs.includeTests=false -Dspotbugs.xmlOutput=true
+
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------------< com.atria:todo-cli >-------------------------
+[INFO] Building Smart Todo CLI 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spotbugs:4.8.6.6:check (default-cli) > :spotbugs @ todo-cli >>>
+[INFO] 
+[INFO] --- spotbugs:4.8.6.6:spotbugs (spotbugs) @ todo-cli ---
+[INFO] Fork Value is true
+     [java] The following classes needed for analysis were missing:
+     [java]   makeConcatWithConstants
+     [java]   applyAsInt
+[INFO] Done SpotBugs Analysis....
+[INFO] 
+[INFO] <<< spotbugs:4.8.6.6:check (default-cli) < :spotbugs @ todo-cli <<<
+[INFO] 
+[INFO] 
+[INFO] --- spotbugs:4.8.6.6:check (default-cli) @ todo-cli ---
+[INFO] BugInstance size is 0
+[INFO] Error size is 0
+[INFO] No errors/warnings found
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  9.153 s
+[INFO] Finished at: 2026-11-14T17:08:27+05:30
+[INFO] ------------------------------------------------------------------------

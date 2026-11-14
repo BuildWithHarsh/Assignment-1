@@ -1,0 +1,108 @@
+{
+  "total": 17,
+  "passed": 17,
+  "cases": [
+    {
+      "ac": "AC-01",
+      "name": "add with only --title uses defaults",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "ac": "AC-02",
+      "name": "title trimming and length validation",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "ac": "AC-03",
+      "name": "priority parsing",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "ac": "AC-04",
+      "name": "tag normalisation",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "ac": "AC-05",
+      "name": "sequential ids, never reused",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "ac": "AC-06",
+      "name": "missing / malformed ids",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "ac": "AC-07",
+      "name": "update changes only supplied fields",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "ac": "AC-08",
+      "name": "list default order by id",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "ac": "AC-09",
+      "name": "tag filter case-insensitive",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "ac": "AC-10",
+      "name": "status filter",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "ac": "AC-11",
+      "name": "priority sort with id tie-break; filters combine",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "ac": "AC-12",
+      "name": "status transition rules",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "ac": "AC-13",
+      "name": "persistence across invocations",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "ac": "AC-14",
+      "name": "missing data file is empty list",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "ac": "AC-15",
+      "name": "corrupt file -> STORAGE_ERROR, file untouched",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "ac": "AC-16",
+      "name": "bad invocations",
+      "passed": true,
+      "failures": []
+    },
+    {
+      "ac": "CONST-IV",
+      "name": "same commands on same data give same output",
+      "passed": true,
+      "failures": []
+    }
+  ]
+}
