@@ -76,3 +76,25 @@ changes feature scope. The three worth a human glance before `/speckit-plan`:
    a non-JSON file, not a zero-byte one.
 
 **Result**: all items pass on iteration 1. Spec is ready for `/speckit-clarify` or `/speckit-plan`.
+
+### Re-validation record (after `/speckit-clarify`, 2026-11-14)
+
+All 16 items re-evaluated against the clarified spec: **16/16 → 16/16 passing**, no state changes, no
+regressions. The deliberate retention noted above (the `java -jar` invocation line) still stands and
+still applies only to the Invocation Contract section.
+
+The three items the iteration-1 notes listed as "worth a human glance" are now **decided by the product
+owner** and recorded under `## Clarifications` in the spec, so that paragraph is superseded:
+
+1. **Fault precedence** — resolved: arguments → storage → lookup → transition, with the data file not
+   opened at all when a command fails an argument check. Now binding in FR-006.
+2. **Repeated options** — resolved: rejected with exit `2`, never last-one-wins. Now FR-005a.
+3. **Zero-byte data file** — resolved: refused as damaged with exit `5`, file untouched. Now FR-031a.
+
+Two further decisions came out of the same session: the store's shape is an object carrying the tasks
+plus a persisted id counter, with any other shape refused (FR-029a, FR-029b, and a new **Id Counter**
+key entity); and error `message` text is fixed wording plus the user's offending value only, with no
+machine-specific content, which extends the determinism guarantee to stderr (FR-003a, FR-034, FR-037).
+
+Requirement count grew from 37 to 42. No acceptance criterion was changed, so `.harness/contract_tests.py`
+needs no edit and the lock stays valid.

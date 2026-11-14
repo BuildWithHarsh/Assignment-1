@@ -40,6 +40,16 @@ java -jar target/todo-cli.jar --data <path-to-json> <command> [options]
 | delete | `delete <id>` | `{"deleted": <id>}` |
 | move | `move <id> <STATUS>` | the updated task |
 
+## Clarifications
+
+### Session 2026-11-14
+
+- Q: When the data file exists but is completely empty (zero bytes), should the tool treat it as an empty task list and succeed, or refuse it as damaged? → A: Refuse it as damaged — exit `5` / `STORAGE_ERROR`, file left untouched (Option B)
+- Q: When the data file holds valid JSON but not the shape this tool writes, should the tool refuse it as damaged, or accept what it can? → A: Store is an object wrapper holding the task collection and a persisted id counter; any other shape, including a bare array, is refused with exit `5` and the file left untouched (Option A)
+- Q: When a command is wrong in two ways at once (e.g. `update 99` with no fields), which error should win? → A: Arguments → storage → lookup → transition. `update 99` with no fields is exit `2`; a bad argument against a corrupt file is exit `2` (Option A)
+- Q: When the same option is given twice in one command (e.g. `add --title "a" --title "b"`), should the tool reject it or silently use one value? → A: Reject any repeated option with exit `2` / `VALIDATION_ERROR` (Option A)
+- Q: Should the error `message` text be fixed and repeatable, or may it vary by quoting the bad value or an underlying system error? → A: Fixed wording per failure, plus the user-supplied offending value where one exists, and nothing machine-specific (Option B)
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Capture a task and get it back (Priority: P1)
@@ -215,6 +225,10 @@ change survives into the next invocation; delete a task and confirm it is gone.
   the file. *(AC-14)*
 - **Corrupt data file**: never repaired, never overwritten, never truncated — exit `5` with the bytes
   left exactly as found. *(AC-15)*
+- **Zero-byte data file**: refused as damaged, exit `5`, file left untouched — not read as an empty
+  list. A file that exists but holds nothing is indistinguishable from a truncated write, so the tool
+  stops rather than overwrite a possible casualty. Starting clean is the *missing* file path (AC-14),
+  which needs no pre-created file.
 - **Title boundary**: 200 characters accepted, 201 rejected; length is measured after trimming.
 - **Whitespace-only title**: rejected as blank, not stored as an empty string.
 - **Tags that collapse to nothing**: `--tags " , ,"` yields `[]`, not an error.
@@ -242,13 +256,28 @@ change survives into the next invocation; delete a task and confirm it is gone.
 - **FR-003**: System MUST, on any failure, write nothing to stdout and write exactly one document
   `{"error":{"code":"<CODE>","message":"<text>"}}` to stderr, where `<CODE>` is one of
   `VALIDATION_ERROR`, `INVALID_TRANSITION`, `NOT_FOUND`, `STORAGE_ERROR`.
+- **FR-003a**: System MUST use fixed, repeatable wording for each distinct failure, optionally followed
+  by the user-supplied value that caused it (for example `unknown priority: urgent`). The message MUST
+  NOT contain anything machine-specific — no file paths, no underlying system or parser error text, no
+  stack traces, no timestamps — so that the same command produces the same error document on any
+  machine. *(Clarification 2026-11-14)*
 - **FR-004**: System MUST map each failure class to its exit code exactly: `2` `VALIDATION_ERROR`,
   `3` `INVALID_TRANSITION`, `4` `NOT_FOUND`, `5` `STORAGE_ERROR`.
 - **FR-005**: System MUST reject an unknown command and any unknown option with exit `2`. *(AC-16)*
+- **FR-005a**: System MUST reject a repeated option with exit `2`, rather than letting one occurrence
+  win silently. This applies to every option including `--tags`, which replaces the tag set rather than
+  accumulating across repeats. System MUST also reject an option that is missing its value, and any
+  extra positional argument beyond those the command defines.
+  *(Clarification 2026-11-14)*
 - **FR-006**: System MUST evaluate faults in this fixed order, so that one invocation always produces
   one predictable code: (1) `--data` present, (2) command known, (3) option names known and option
-  values well-formed, (4) command arity and required options satisfied, (5) data file readable and
-  parseable, (6) requested id exists, (7) requested status change allowed, (8) write succeeds.
+  values well-formed, (4) command arity and required options satisfied, (5) data file readable, of the
+  expected shape and parseable, (6) requested id exists, (7) requested status change allowed, (8) write
+  succeeds. The first failing check decides the exit code; later checks MUST NOT run. Required
+  consequences: `update 99` with no field options exits `2` (not `4`); `move <id> FINISHED` exits `2`
+  (not `3`); a malformed argument against a corrupt data file exits `2` (not `5`); and the data file
+  MUST NOT be opened at all when a command fails checks 1 through 4.
+  *(Clarification 2026-11-14)*
 
 **Task shape**
 
@@ -310,10 +339,22 @@ change survives into the next invocation; delete a task and confirm it is gone.
 
 - **FR-029**: System MUST persist tasks in the file given by `--data` so that they are visible to later
   invocations using the same path. *(AC-13)*
+- **FR-029a**: System MUST store its data as a single JSON object carrying both the task collection and
+  the id counter, so that the never-reuse rule survives deletion of the highest id. The counter MUST
+  record the highest id ever issued, MUST NOT be recomputed from the tasks currently present, and MUST
+  be written on every mutating command. *(AC-05, Clarification 2026-11-14)*
+- **FR-029b**: System MUST validate the shape of the data file before use and MUST fail with exit `5`,
+  leaving the file untouched, when the content is valid JSON but not this shape — including a bare JSON
+  array, a JSON scalar, a missing task collection, a missing or non-integer id counter, or a task entry
+  whose required fields are absent or of the wrong type. An unrecognised shape MUST NEVER be repaired,
+  upgraded or overwritten. *(Clarification 2026-11-14)*
 - **FR-030**: System MUST treat a missing data file as an empty task list, without creating it for
   read-only commands. *(AC-14)*
 - **FR-031**: System MUST fail with exit `5` when the data file is not valid JSON, and MUST leave its
   contents byte-for-byte unchanged. *(AC-15)*
+- **FR-031a**: System MUST treat an existing zero-byte data file as damaged, failing with exit `5` and
+  leaving the file untouched, for both read and write commands. A zero-byte file MUST NOT be read as an
+  empty task list; only an absent file is a clean start. *(Clarification 2026-11-14)*
 - **FR-032**: System MUST write the data file atomically — a temporary file in the same directory
   followed by an atomic move — so that no reader ever observes a partially written file.
 - **FR-033**: System MUST fail with exit `5` when the data file cannot be read or written for reasons
@@ -321,23 +362,27 @@ change survives into the next invocation; delete a task and confirm it is gone.
 
 **Determinism and safety**
 
-- **FR-034**: System MUST produce identical stdout and identical exit codes for an identical command
-  sequence against identical starting data, with `createdAt` the sole permitted variation.
+- **FR-034**: System MUST produce identical stdout, identical stderr and identical exit codes for an
+  identical command sequence against identical starting data, with `createdAt` the sole permitted
+  variation. The determinism guarantee covers error documents, not only success output.
 - **FR-035**: System MUST NOT use randomness, generated unique identifiers, locale-dependent
   formatting, or ordering that depends on internal storage layout.
 - **FR-036**: System MUST NOT execute, interpret or shell out to any user-supplied value, and MUST NOT
   access the network.
-- **FR-037**: System MUST NOT write secrets, credentials or the full contents of the data file into
-  error messages.
+- **FR-037**: System MUST NOT write secrets, credentials, the data file path, or any part of the data
+  file's contents into error messages or any other output.
 
 ### Key Entities
 
 - **Task**: One thing the user intends to do. Carries an immutable identity (`id`) and creation instant
   (`createdAt`), a human-readable `title`, an importance (`priority`), a lifecycle position (`status`),
   and a set of normalised labels (`tags`). Tasks are independent; none references another.
-- **Task Store**: The single JSON file named by `--data` that holds every task for one local user, plus
-  enough information to honour the never-reuse-an-id rule. It is the sole source of truth and the only
-  thing that survives between invocations.
+- **Task Store**: The single JSON file named by `--data` that holds every task for one local user. It is
+  a JSON *object* carrying two things: the collection of tasks, and an **Id Counter** recording the
+  highest id ever issued. It is the sole source of truth and the only thing that survives between
+  invocations. Any other shape is damaged data, never a store to be upgraded.
+- **Id Counter**: The highest task id ever issued in this store, persisted alongside the tasks. It only
+  ever increases, which is what makes a deleted id unreachable forever rather than merely absent.
 - **Error Report**: The single document emitted on stderr when a command fails, pairing a stable
   machine-readable `code` with a human-readable `message`.
 
@@ -366,29 +411,17 @@ Reasonable defaults chosen where the description was silent. Each is cheap to ch
 
 - **Single user, single store**: no concurrent invocations against the same data file, no locking, no
   multi-user access control. The file is the user's own.
-- **Fault precedence** (FR-006): argument faults outrank storage faults, which outrank lookup faults,
-  which outrank transition faults. Consequence: `update 99` with no field options reports `2`, not `4`;
-  and `move 1 FINISHED` reports `2`, not `3`.
-- **Validation precedes load**: a malformed argument is rejected before the data file is opened, so a
-  bad argument against a corrupt file reports `2`, not `5`.
 - **`--tags` takes one comma-separated value**; repeating the option or passing extra positional values
   is a validation failure. An update to `--tags` replaces the whole set rather than merging.
 - **`--tag` filter takes exactly one tag**; multi-tag filtering is out of scope.
 - **`--sort` accepts only `priority`**; any other value fails with exit `2`.
-- **Repeated options** (for example `--title a --title b`) fail with exit `2` rather than silently
-  taking the last value, since silent precedence is the kind of behaviour that surprises scripts.
-- **Id counter is monotonic**, persisted in the store, and derived from the highest id ever issued —
-  not from the ids currently present — which is what makes the never-reuse rule hold across deletes.
+- **Exact key names inside the store** are left to the implementation plan; this spec fixes the store's
+  shape (an object carrying tasks plus an id counter) and its strictness, not its spelling.
 - **Tags have no length or character limit** beyond being non-empty after trimming.
 - **Titles may contain any character** including commas and quotes; only length and blankness are
   validated.
 - **`createdAt` is recorded in UTC at second or finer precision**, formatted ISO-8601 with a trailing
   `Z`, and is the only non-deterministic value in the output.
-- **The data file holds a JSON document of the system's own shape**; an otherwise valid JSON file whose
-  shape is not recognised is a `STORAGE_ERROR`, treated the same as malformed JSON and likewise never
-  overwritten.
-- **An empty, zero-byte data file** is treated as malformed rather than as an empty list, since it
-  cannot be distinguished from a truncated write.
 - **Parent directory must already exist**; the tool creates the data file but not the directories above
   it, and reports `5` if it cannot.
 - **Output JSON field order and formatting are stable** across runs, as required by determinism, but no
