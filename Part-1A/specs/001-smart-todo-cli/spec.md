@@ -400,8 +400,12 @@ change survives into the next invocation; delete a task and confirm it is gone.
   configuration file, no installation step beyond the single build artifact, and no network access.
 - **SC-005**: Every failure path reports a non-zero exit code and a machine-readable error document with
   an empty stdout — 100% of error cases, so a calling script never has to parse prose.
-- **SC-006**: Any single command against a store of 1,000 tasks completes in under 2 seconds on a
-  typical laptop.
+- **SC-006** *(indicative target — not verified, not a gate)*: Any single command against a store of
+  1,000 tasks completes in under 2 seconds. No performance harness is in scope for this assignment, and
+  no quality gate measures timing, so this figure is a sanity ceiling for design decisions rather than a
+  criterion anything is tested against. It is deliberately left unquantified as to hardware, because a
+  number that named a machine would imply a measurement that is not being taken. If performance ever
+  needs to be guaranteed, this becomes a real criterion with a benchmark task behind it.
 - **SC-007**: All six project quality gates report green: integrity, build, lint, static analysis, unit
   tests at a minimum of 80% line coverage, and contract tests.
 
@@ -427,7 +431,9 @@ Reasonable defaults chosen where the description was silent. Each is cheap to ch
 - **Output JSON field order and formatting are stable** across runs, as required by determinism, but no
   specific indentation is promised to the user.
 - **SC-006's 1,000-task / 2-second target** is an assumed ceiling for a personal todo list; no volume
-  requirement was stated.
+  requirement was stated, and the criterion is explicitly unverified — see SC-006. The whole store is
+  read into memory and rewritten per mutating command, which is the simplest correct design at this
+  scale; if volume ever matters, that is the decision to revisit first.
 - **Localisation is out of scope**: messages are English, and no locale affects parsing, formatting or
   ordering.
 
