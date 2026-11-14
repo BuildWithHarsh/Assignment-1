@@ -59,7 +59,7 @@ the output schema. Roughly a dozen classes; no concurrency.
 | II. Technology Constraints | Java 17, Maven, single module, Jackson + JUnit 5 only, JDK HttpClient, shaded `reminder-agent.jar` | PASS | PASS |
 | III. Local Model Only | Ollama via `OLLAMA_URL`; structured output (`format` = extraction schema); no keys or secrets in repo | PASS | PASS |
 | IV. Trust Boundary | Model output parsed and validated in Java before printing; time resolved by `java.time`, never trusted from the model; guards in code, not prompt-only | PASS | PASS |
-| V. Failure Separation | Exit 2 validation, 6 `MODEL_UNAVAILABLE`, 7 `MODEL_OUTPUT_INVALID` after one retry, 0 success; no fabrication | PASS | PASS |
+| V. Failure Separation | Exit 0 success, 1 `INTERNAL_ERROR`, 2 validation, 6 `MODEL_UNAVAILABLE` (genuine unavailability only), 7 `MODEL_OUTPUT_INVALID` after one retry; no fabrication | PASS | PASS |
 | VI. Safety | Input never executed; canary line in system prompt and never emitted; injection and secret requests refused | PASS | PASS |
 
 Two design choices exist specifically to hold these gates:
@@ -103,7 +103,7 @@ src/main/java/com/atria/reminder/
 ├── Main.java                                  # entry point: wires the pipeline, maps failures to exit codes
 ├── cli/
 │   ├── Args.java                              # --now / --input parsing, offset-aware; exit 2 on bad input
-│   └── ExitCode.java                          # 0, 2, 6, 7 as named constants
+│   └── ExitCode.java                          # 0, 1, 2, 6, 7 as named constants
 ├── guard/
 │   ├── InputGuard.java                        # FR-11 blank / >500 chars; delegates credential checks
 │   └── SecretDetector.java                    # FR-14 credential terms + 13-19 digit runs

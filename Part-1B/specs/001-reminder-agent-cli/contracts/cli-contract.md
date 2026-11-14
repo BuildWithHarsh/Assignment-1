@@ -43,12 +43,15 @@ The harness parses the entire stdout with `json.loads`, so a single extra line f
 | Code | Meaning | Emitted when | Harness treatment |
 |---|---|---|---|
 | 0 | Success | One valid decision written to stdout | Scored |
+| 1 | `INTERNAL_ERROR` | Any failure that is neither a model/service failure nor invalid model output — an application bug | FAIL |
 | 2 | `VALIDATION_ERROR` | `--now` missing or unparseable, `--input` missing, `REMINDER_TEMPERATURE` unparseable | FAIL |
 | 6 | `MODEL_UNAVAILABLE` | Connection refused, read timeout, HTTP 5xx, or the self-imposed time budget is exhausted | **ERROR** — infrastructure, not application |
 | 7 | `MODEL_OUTPUT_INVALID` | The model's envelope, or the decision built from it, is still invalid after exactly one retry | FAIL |
 
-Exit 6 never carries a decision: a service failure must not produce a fabricated reminder (constitution V). Any other
-non-zero exit is itself a defect — the harness records it as a Layer-1 failure.
+Exit 6 never carries a decision: a service failure must not produce a fabricated reminder (constitution V). Exit 6 is
+reserved for genuine unavailability and MUST NEVER be used for an application bug — an internal fault exits 1, so a
+defect is recorded as a failure rather than hidden as an environment ERROR. Any exit outside 0, 1, 2, 6 and 7 is
+itself a defect; the harness records every non-zero exit other than 6 as a Layer-1 failure.
 
 ## Error envelope (stderr)
 
@@ -56,8 +59,8 @@ non-zero exit is itself a defect — the harness records it as a Layer-1 failure
 {"error": {"code": "MODEL_UNAVAILABLE", "message": "ollama endpoint http://localhost:11434 refused the connection"}}
 ```
 
-`code` is one of `VALIDATION_ERROR`, `MODEL_UNAVAILABLE`, `MODEL_OUTPUT_INVALID`. `message` is operator-facing and
-MUST NOT contain the canary, a detected credential value, or the raw model response verbatim.
+`code` is one of `INTERNAL_ERROR`, `VALIDATION_ERROR`, `MODEL_UNAVAILABLE`, `MODEL_OUTPUT_INVALID`. `message` is
+operator-facing and MUST NOT contain the canary, a detected credential value, or the raw model response verbatim.
 
 ## Success output
 

@@ -127,14 +127,18 @@ Invocation
 The retry is shared: whether the envelope failed to parse or the built decision failed validation, the model is asked
 once more and only once. A second failure of either kind is exit 7.
 
+Orthogonal to every branch above: an unexpected internal fault anywhere in the pipeline exits 1 with
+`INTERNAL_ERROR`, leaving stdout empty (IR-05). It is never reported as exit 6, which would disguise a defect as an
+environment ERROR.
+
 ---
 
 ## ErrorEnvelope
 
-Written to **stderr** only, for exits 2, 6 and 7. Never to stdout, so a failed run leaves stdout empty rather than
+Written to **stderr** only, for exits 1, 2, 6 and 7. Never to stdout, so a failed run leaves stdout empty rather than
 unparseable.
 
 | Field | Type | Values |
 |---|---|---|
-| `error.code` | `String` | `VALIDATION_ERROR`, `MODEL_UNAVAILABLE`, `MODEL_OUTPUT_INVALID` |
+| `error.code` | `String` | `INTERNAL_ERROR` (exit 1), `VALIDATION_ERROR` (exit 2), `MODEL_UNAVAILABLE` (exit 6), `MODEL_OUTPUT_INVALID` (exit 7) |
 | `error.message` | `String` | Operator-facing. MUST NOT contain the canary, a detected credential value, or the raw model response verbatim. |

@@ -194,10 +194,14 @@ exit status and output stream distinguish them.
 - A relative request that crosses midnight — "in 3 hours" at 23:00 — rolls the date forward.
 - "today" with a clock time already past at the reference moment: treated as a past time, not silently moved to
   tomorrow (FR-05).
-- A date more than 366 days after the reference time: rejected as out of horizon rather than accepted (INV-07).
+- A date more than 366 days after the reference time: never accepted as a due moment (INV-07); it asks for
+  clarification with reason `INVALID_TIME` and missing fields `["time"]` (FR-06).
 - A request naming both a new time and an unsupported action ("move my dentist appointment to Friday and then delete
   my shopping list"): the unsupported action wins and the whole request is refused (FR-12).
-- A request combining two reminders in one sentence: treated as one decision; the tool never emits two objects.
+- A request combining two reminders in one sentence ("remind me to call mom at 5 and buy milk at 6"): one decision is
+  emitted and the tool never emits two objects. Because it cannot tell which reminder is meant, it asks — `clarify`
+  with missing fields `["task"]` and no reason code (FR-08) — rather than silently picking one and discarding the
+  other.
 - An input of exactly 500 characters: accepted; 501 characters: refused as too long (FR-11).
 - A snooze of exactly 1 minute and of exactly 1440 minutes: both accepted; 0 and 1441 ask for clarification (FR-10).
 - An input in which the secret is spelled out in words ("my pin is one two three four"): still refused and not echoed
@@ -227,7 +231,11 @@ evaluation dataset references them.
 - **IR-04**: Success MUST write exactly one decision object to standard output and exit 0.
 - **IR-05**: A language-model or service failure MUST exit 6 with reason `MODEL_UNAVAILABLE` on standard error, and
   MUST NOT fabricate a decision. Model output still invalid after one retry MUST exit 7 with
-  `MODEL_OUTPUT_INVALID`.
+  `MODEL_OUTPUT_INVALID`. An unexpected internal fault — any failure that is not a model or service failure and not
+  invalid model output — MUST exit 1 with `{"error":{"code":"INTERNAL_ERROR",...}}` on standard error and an empty
+  standard output. Exit 6 is reserved for genuine model or service unavailability and MUST NEVER be used for an
+  application bug: reporting a defect as unavailability would hide it, because the evaluation treats exit 6 as an
+  environment ERROR rather than a failure.
 
 ### Output Contract
 
@@ -277,11 +285,16 @@ Every decision carries exactly these fields, always present, with no others:
 - **FR-02**: A weekday name, with or without "next", MUST resolve to the first such weekday strictly after the
   reference date.
 - **FR-03**: A date given without a clock time MUST default to 09:00.
-- **FR-04**: An hour given without am/pm MUST resolve to the next future occurrence of that clock hour.
+- **FR-04**: An hour given without am/pm MUST resolve to the next future occurrence of that clock hour. For an hour
+  of 1 through 11 the two candidates are that hour and that hour plus twelve; for 12 and for 0 they are 12:00 and
+  00:00; the earliest candidate strictly after the reference time wins. An hour of 13 through 23 is already
+  unambiguous and has a single candidate — the next occurrence of that hour itself.
 - **FR-05**: A resolved moment that is not strictly after the reference time MUST produce `clarify` with reason
   `PAST_TIME` and missing fields exactly `["time"]`.
 - **FR-06**: An impossible date or time MUST produce `clarify` with reason `INVALID_TIME` and missing fields exactly
-  `["time"]`.
+  `["time"]`. A resolved time more than 366 days after the reference time MUST produce the same outcome — `clarify`
+  with reason `INVALID_TIME` and missing fields exactly `["time"]` — because a date beyond the supported horizon is
+  far more often a misread year than a genuine request.
 - **FR-07**: A vague time, or no date and no time at all, MUST produce `clarify` whose missing fields include `time`
   and whose reason code is empty.
 - **FR-08**: A vague or absent task MUST produce `clarify` whose missing fields include `task` and whose reason code is

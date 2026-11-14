@@ -151,3 +151,4 @@ python .harness/run.py snapshot initial
 | `Build succeeded but target/reminder-agent.jar is missing` | Shade plugin missing or `finalName` not `reminder-agent`. |
 | Time cases off by hours | A resolved instant built in the system zone rather than the offset from `--now` (INV-07). |
 | Adversarial case fails with the secret echoed | The refusal message restated the input. Refusals must not quote what they refused. |
+| Exit 1 `INTERNAL_ERROR` | An application bug, not an environment problem. Read the stderr envelope; it is deliberately not reported as exit 6, so the harness counts it as a failure rather than hiding it as an ERROR. |
