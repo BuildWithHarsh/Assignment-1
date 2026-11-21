@@ -1,0 +1,86 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< com.atria:reminder-agent >----------------------
+[INFO] Building Reminder Agent 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ reminder-agent ---
+[INFO] Deleting C:\Users\harsh\Desktop\AISDLC Assignment\Assignment-1\Part-1B\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ reminder-agent ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ reminder-agent ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 24 source files with javac [debug release 17] to target\classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ reminder-agent ---
+[INFO] skip non existing resourceDirectory C:\Users\harsh\Desktop\AISDLC Assignment\Assignment-1\Part-1B\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ reminder-agent ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 10 source files with javac [debug release 17] to target\test-classes
+[INFO] 
+[INFO] --- surefire:3.2.5:test (default-test) @ reminder-agent ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.atria.reminder.cli.ArgsTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.131 s -- in com.atria.reminder.cli.ArgsTest
+[INFO] Running com.atria.reminder.decision.DecisionMapperTest
+[INFO] Tests run: 22, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.571 s -- in com.atria.reminder.decision.DecisionMapperTest
+[INFO] Running com.atria.reminder.decision.TaskTextTest
+[INFO] Tests run: 19, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.207 s -- in com.atria.reminder.decision.TaskTextTest
+[INFO] Running com.atria.reminder.guard.InputGuardTest
+[INFO] Tests run: 20, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.085 s -- in com.atria.reminder.guard.InputGuardTest
+[INFO] Running com.atria.reminder.guard.SecretDetectorTest
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 s -- in com.atria.reminder.guard.SecretDetectorTest
+[INFO] Running com.atria.reminder.model.ExtractionParserTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.042 s -- in com.atria.reminder.model.ExtractionParserTest
+[INFO] Running com.atria.reminder.output.JsonPrinterTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.008 s -- in com.atria.reminder.output.JsonPrinterTest
+[INFO] Running com.atria.reminder.output.OutputValidatorTest
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.052 s -- in com.atria.reminder.output.OutputValidatorTest
+[INFO] Running com.atria.reminder.prompt.PromptBuilderTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.038 s -- in com.atria.reminder.prompt.PromptBuilderTest
+[INFO] Running com.atria.reminder.time.TimeResolverTest
+[INFO] Tests run: 37, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.067 s -- in com.atria.reminder.time.TimeResolverTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 160, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.4.1:jar (default-jar) @ reminder-agent ---
+[INFO] Building jar: C:\Users\harsh\Desktop\AISDLC Assignment\Assignment-1\Part-1B\target\reminder-agent.jar
+[INFO] 
+[INFO] --- shade:3.5.1:shade (default) @ reminder-agent ---
+[INFO] Including com.fasterxml.jackson.core:jackson-databind:jar:2.17.2 in the shaded jar.
+[INFO] Including com.fasterxml.jackson.core:jackson-annotations:jar:2.17.2 in the shaded jar.
+[INFO] Including com.fasterxml.jackson.core:jackson-core:jar:2.17.2 in the shaded jar.
+[INFO] Including com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.17.2 in the shaded jar.
+[WARNING] jackson-core-2.17.2.jar, jackson-databind-2.17.2.jar, jackson-datatype-jsr310-2.17.2.jar define 1 overlapping classes: 
+[WARNING]   - META-INF.versions.9.module-info
+[WARNING] jackson-annotations-2.17.2.jar, jackson-core-2.17.2.jar, jackson-databind-2.17.2.jar, jackson-datatype-jsr310-2.17.2.jar define 2 overlapping resources: 
+[WARNING]   - META-INF/LICENSE
+[WARNING]   - META-INF/NOTICE
+[WARNING] jackson-annotations-2.17.2.jar, jackson-core-2.17.2.jar, jackson-databind-2.17.2.jar, jackson-datatype-jsr310-2.17.2.jar, reminder-agent.jar define 1 overlapping resource: 
+[WARNING]   - META-INF/MANIFEST.MF
+[WARNING] maven-shade-plugin has detected that some files are
+[WARNING] present in two or more JARs. When this happens, only one
+[WARNING] single version of the file is copied to the uber jar.
+[WARNING] Usually this is not harmful and you can skip these warnings,
+[WARNING] otherwise try to manually exclude artifacts based on
+[WARNING] mvn dependency:tree -Ddetail=true and the above output.
+[WARNING] See https://maven.apache.org/plugins/maven-shade-plugin/
+[INFO] Replacing original artifact with shaded artifact.
+[INFO] Replacing C:\Users\harsh\Desktop\AISDLC Assignment\Assignment-1\Part-1B\target\reminder-agent.jar with C:\Users\harsh\Desktop\AISDLC Assignment\Assignment-1\Part-1B\target\reminder-agent-1.0.0-shaded.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  8.832 s
+[INFO] Finished at: 2026-11-21T16:52:37+05:30
+[INFO] ------------------------------------------------------------------------
