@@ -6,3 +6,5 @@
 | 20261115-084925 | eval-03 | 7362fe5 | qwen2.5:7b | 3 | 100% | 88% | 100% | 100% | 88% | 0 | **PASS** |
 | 20261115-091604 | repair-01-input | e8921bb | qwen2.5:7b | 1 | 100% | 0% | n/a | n/a | 0% | 0 | **FAIL (unofficial)** |
 | 20261121-144057 | eval-04 | c62b603 | qwen2.5:7b | 3 | 100% | 96% | 100% | 100% | 96% | 0 | **PASS** |
+| 20261121-154900 | repair-02-input | 9f52a82 | qwen2.5:7b | 1 | n/a | n/a | n/a | n/a | n/a | 1 | **INCONCLUSIVE (unofficial)** |
+| 20261121-155321 | repair-02-input-b | 9f52a82 | qwen2.5:7b | 1 | 100% | 0% | n/a | n/a | 0% | 0 | **FAIL (unofficial)** |

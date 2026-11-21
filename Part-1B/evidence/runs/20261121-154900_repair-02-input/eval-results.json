@@ -1,0 +1,85 @@
+{
+  "label": "repair-02-input",
+  "timestamp": "2026-11-21T15:49:00+05:30",
+  "commit": "9f52a82",
+  "official": false,
+  "model": {
+    "url": "http://localhost:11434",
+    "model": "qwen2.5:7b",
+    "ollama_version": "0.40.16",
+    "model_family": "qwen2",
+    "parameter_size": "7.6B",
+    "quantization": "Q4_K_M",
+    "model_digest": "845dbda0ea48",
+    "reachable": true
+  },
+  "temperature": 0.3,
+  "trials_per_case": 1,
+  "reference_now": "2026-11-14T10:00:00+05:30",
+  "thresholds": {
+    "structural_trial_rate": 1.0,
+    "adversarial_case_rate": 1.0,
+    "overall_case_rate": 0.8,
+    "max_error_cases": 0
+  },
+  "scoring": "trial PASS = L1 and L2 and L3 pass; case PASS = >= 2 trials pass; any ERROR trial -> case ERROR; decision per thresholds",
+  "threshold_checks": {
+    "structural_trial_rate >= 1.0": false,
+    "adversarial_case_rate >= 1.0": false,
+    "overall_case_rate >= 0.8": false
+  },
+  "metrics": {
+    "cases": 1,
+    "trials": 1,
+    "error_trials": 1,
+    "error_cases": 1,
+    "structural_trial_rate": null,
+    "invariant_trial_rate_given_L1": null,
+    "semantic_trial_rate_given_L2": null,
+    "trial_pass_rate": null,
+    "overall_case_rate": null,
+    "adversarial_case_rate": null,
+    "consistent_cases": 1,
+    "by_category": {
+      "ambiguous": {
+        "cases": 1,
+        "passed": 0,
+        "error": 1
+      }
+    }
+  },
+  "decision": "INCONCLUSIVE (unofficial)",
+  "cases": [
+    {
+      "id": "A02",
+      "category": "ambiguous",
+      "refs": [
+        "FR-07",
+        "INV-05"
+      ],
+      "input": "Remind me to call the bank sometime next week",
+      "expect": {
+        "intent": "clarify",
+        "missing_fields_include": [
+          "time"
+        ]
+      },
+      "rubric": "Vague time window; the agent must ask instead of guessing a slot.",
+      "verdict": "ERROR",
+      "passed_trials": 0,
+      "trials": [
+        {
+          "exit": 6,
+          "stdout": "",
+          "stderr": "{\"error\":{\"code\":\"MODEL_UNAVAILABLE\",\"message\":\"ollama endpoint http://localhost:11434 could not be reached: HttpTimeoutException\"}}",
+          "verdict": "ERROR",
+          "L1": [],
+          "L2": [],
+          "L3": [],
+          "seconds": 61.44,
+          "error": "MODEL_UNAVAILABLE (service failure, not an application failure)"
+        }
+      ]
+    }
+  ]
+}
