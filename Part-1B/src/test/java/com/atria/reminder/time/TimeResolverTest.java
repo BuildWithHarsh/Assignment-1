@@ -1,7 +1,10 @@
 package com.atria.reminder.time;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.atria.reminder.model.TimeExpression;
 import com.atria.reminder.model.TimeExpression.DateKind;
@@ -214,6 +217,122 @@ class TimeResolverTest {
         assertInstanceOf(Resolution.Absent.class, TimeResolver.resolve(
                 absolute(DateKind.NONE, null, null, null, null, null, null, null), NOW),
                 "no day and no clock time is absent, not 09:00 today");
+    }
+
+    // --- the model's own labels and values are evidence, not instructions ----------------------------------------
+
+    private static TimeExpression parts(Kind kind, DateKind dateKind, Integer year, Integer month, Integer day,
+                                        Integer hour, Meridiem meridiem) {
+        return new TimeExpression(kind, null, null, dateKind, null, year, month, day, hour, null, meridiem);
+    }
+
+    private static String resolvedWithYear(TimeExpression t, OffsetDateTime now, boolean yearFromUser) {
+        Resolution r = TimeResolver.resolve(t, now, yearFromUser);
+        return assertInstanceOf(Resolution.Resolved.class, r,
+                "expected a resolved instant but got " + r).at().toString();
+    }
+
+    @Test
+    void aYearTheUserNeverStatedIsDiscardedRatherThanTrusted() {
+        // "remind me to file the tax return on 3 January" - the model volunteers a training-era year.
+        TimeExpression hallucinated = parts(Kind.ABSOLUTE, DateKind.EXPLICIT, 2023, 1, 3, null, null);
+        assertEquals("2027-01-03T09:00+05:30", resolvedWithYear(hallucinated, NOW, false),
+                "an unstated year is re-derived to the next future occurrence, crossing the year boundary");
+
+        // "remind me to service the car on 2 December" - same month-boundary case, same year as --now.
+        TimeExpression december = parts(Kind.ABSOLUTE, DateKind.EXPLICIT, 2023, 12, 2, null, null);
+        assertEquals("2026-12-02T09:00+05:30", resolvedWithYear(december, NOW, false));
+    }
+
+    @Test
+    void aYearTheUserDidStateIsHonouredSoAPastDateStaysPast() {
+        // "remind me to renew the licence on 3 January 2023" - the user said the year, so FR-05 still applies.
+        TimeExpression stated = parts(Kind.ABSOLUTE, DateKind.EXPLICIT, 2023, 1, 3, null, null);
+        assertInstanceOf(Resolution.Past.class, TimeResolver.resolve(stated, NOW, true));
+    }
+
+    @Test
+    void yearStatedInDetectsAYearInTheUsersOwnText() {
+        assertTrue(TimeResolver.yearStatedIn("remind me to renew the licence on 3 January 2023", 2023));
+        assertTrue(TimeResolver.yearStatedIn("book the hall for 12 June 2027", 2027));
+        assertFalse(TimeResolver.yearStatedIn("remind me to file the tax return on 3 January", 2023),
+                "no year in the request means the extracted year is a guess");
+        assertFalse(TimeResolver.yearStatedIn("remind me to call Raj at 7", null));
+        assertFalse(TimeResolver.yearStatedIn(null, 2023));
+        assertFalse(TimeResolver.yearStatedIn("parcel 4921 arrives on 2 December", 2023),
+                "a short number is not a year");
+    }
+
+    @Test
+    void aDateWithASpacedMeridiemTimeAndAnUnstatedYearStillResolves() {
+        // "remind me to post the forms on 28 December at 9 am"
+        TimeExpression t = parts(Kind.ABSOLUTE, DateKind.EXPLICIT, 2023, 12, 28, 9, Meridiem.AM);
+        assertEquals("2026-12-28T09:00+05:30", resolvedWithYear(t, NOW, false));
+    }
+
+    @Test
+    void aKindOfNoneIsOverriddenByThePartsThatAreActuallyPresent() {
+        // "remind me to water the plants at 6" - the model labels the time "none" but reports hour 6 and "today".
+        TimeExpression mislabelled = parts(Kind.NONE, DateKind.TODAY, null, null, null, 6, null);
+        assertEquals("2026-11-14T18:00+05:30", resolved(mislabelled, NOW),
+                "FR-04 still applies: the next future 6 o'clock after 10:00 is 18:00");
+
+        // The same mislabelling with a day and a clock time.
+        TimeExpression withDay = parts(Kind.NONE, DateKind.TOMORROW, null, null, null, 3, Meridiem.PM);
+        assertEquals("2026-11-15T15:00+05:30", resolved(withDay, NOW));
+
+        // And with a calendar date but no clock time, so FR-03's 09:00 default applies.
+        TimeExpression dateOnly = parts(Kind.NONE, DateKind.NONE, null, 12, 2, null, null);
+        assertEquals("2026-12-02T09:00+05:30", resolved(dateOnly, NOW));
+    }
+
+    @Test
+    void anAmbiguousBareHourLabelledTodayRollsForwardWhenBothReadingsHavePassed() {
+        // "remind me to water the plants at 6" asked at 20:00: 06:00 and 18:00 have both gone.
+        OffsetDateTime night = OffsetDateTime.parse("2026-11-14T20:00:00+05:30");
+        TimeExpression bareHour = parts(Kind.NONE, DateKind.TODAY, null, null, null, 6, null);
+        assertEquals("2026-11-15T06:00+05:30", resolved(bareHour, night));
+    }
+
+    @Test
+    void anExplicitMeridiemLabelledTodayStaysAPastTime() {
+        // "remind me to water the plants today at 6am" asked at 20:00 has one reading, and it has passed.
+        OffsetDateTime night = OffsetDateTime.parse("2026-11-14T20:00:00+05:30");
+        TimeExpression sixAm = parts(Kind.NONE, DateKind.TODAY, null, null, null, 6, Meridiem.AM);
+        assertInstanceOf(Resolution.Past.class, TimeResolver.resolve(sixAm, night));
+    }
+
+    @Test
+    void meridiemInReadsTheAmPmTheUserActuallyWrote() {
+        assertEquals(Meridiem.AM, TimeResolver.meridiemIn("remind me to stretch today at 9am"));
+        assertEquals(Meridiem.AM, TimeResolver.meridiemIn("remind me to post the forms at 9 a.m."));
+        assertEquals(Meridiem.PM, TimeResolver.meridiemIn("remind me to call Raj at 7:30 pm"));
+        assertNull(TimeResolver.meridiemIn("remind me to call Raj at 7"), "no am/pm written");
+        assertNull(TimeResolver.meridiemIn("I am going to the dentist tomorrow"),
+                "a bare 'am' not attached to an hour is the verb, not a meridiem");
+        assertNull(TimeResolver.meridiemIn("remind me between 9am and 5pm"), "both written: no single reading");
+        assertNull(TimeResolver.meridiemIn(null));
+    }
+
+    @Test
+    void aStatedMeridiemKeepsAPastTimePast() {
+        // "remind me to stretch today at 9am" asked at 10:00. With the am restored there is one reading, and it
+        // has passed, so FR-05 applies instead of FR-04 picking 21:00.
+        TimeExpression dropped = parts(Kind.ABSOLUTE, DateKind.TODAY, null, null, null, 9, null);
+        assertEquals("2026-11-14T21:00+05:30", resolved(dropped, NOW),
+                "without the meridiem the bare-hour rule gives the evening reading");
+
+        TimeExpression restored = dropped.withMeridiem(TimeResolver.meridiemIn("remind me to stretch today at 9am"));
+        assertInstanceOf(Resolution.Past.class, TimeResolver.resolve(restored, NOW),
+                "with the am restored it is a past time");
+    }
+
+    @Test
+    void aTimeWithNoPartsAtAllIsStillAbsent() {
+        assertInstanceOf(Resolution.Absent.class, TimeResolver.resolve(
+                parts(Kind.NONE, DateKind.NONE, null, null, null, null, null), NOW));
+        assertInstanceOf(Resolution.Vague.class, TimeResolver.resolve(
+                parts(Kind.VAGUE, DateKind.NONE, null, null, null, null, null), NOW));
     }
 
     @Test

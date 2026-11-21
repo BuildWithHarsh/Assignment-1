@@ -10,6 +10,7 @@ import com.atria.reminder.model.ExtractionException;
 import com.atria.reminder.model.ExtractionParser;
 import com.atria.reminder.model.ModelUnavailableException;
 import com.atria.reminder.model.OllamaClient;
+import com.atria.reminder.model.TimeExpression;
 import com.atria.reminder.output.Decision;
 import com.atria.reminder.output.ErrorEnvelope;
 import com.atria.reminder.output.JsonPrinter;
@@ -92,7 +93,15 @@ public final class Main {
                 continue;
             }
 
-            Resolution resolution = TimeResolver.resolve(extraction.time(), args.now());
+            // Reconcile the model's time parts with what the user actually wrote (constitution IV): a year the
+            // user never stated is a guess, and an am/pm the user did state must not be lost.
+            TimeExpression time = extraction.time();
+            TimeExpression.Meridiem statedMeridiem = TimeResolver.meridiemIn(args.input());
+            if (time.meridiem() == null && statedMeridiem != null && time.hasClockTime()) {
+                time = time.withMeridiem(statedMeridiem);
+            }
+            boolean yearFromUser = TimeResolver.yearStatedIn(args.input(), time.year());
+            Resolution resolution = TimeResolver.resolve(time, args.now(), yearFromUser);
             Decision decision = DecisionMapper.map(extraction, resolution, args.now());
 
             String json;

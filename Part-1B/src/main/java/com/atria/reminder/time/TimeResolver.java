@@ -22,17 +22,77 @@ public final class TimeResolver {
     private TimeResolver() {
     }
 
+    /** Resolves treating any year in the expression as one the user actually stated. */
     public static Resolution resolve(TimeExpression t, OffsetDateTime now) {
-        if (t == null || t.kind() == null || t.kind() == TimeExpression.Kind.NONE) {
+        return resolve(t, now, true);
+    }
+
+    /**
+     * @param yearFromUser whether the user's own text contained a year. A year the user never said is a guess by
+     *                     the model, so it is discarded and re-derived rather than trusted (constitution IV).
+     */
+    public static Resolution resolve(TimeExpression t, OffsetDateTime now, boolean yearFromUser) {
+        if (t == null) {
             return new Resolution.Absent();
         }
-        if (t.kind() == TimeExpression.Kind.VAGUE) {
-            return new Resolution.Vague();
+        boolean hasRelativeParts = t.relativeAmount() != null && t.relativeUnit() != null;
+        boolean hasAbsoluteParts = (t.dateKind() != null && t.dateKind() != TimeExpression.DateKind.NONE)
+                || t.hour() != null || t.month() != null || t.day() != null;
+
+        // 'kind' is only the model's label for what it found; the parts are the evidence. A label of "none"
+        // alongside a day or a clock time is a mislabelling, not an absent time, so the parts decide.
+        if (!hasRelativeParts && !hasAbsoluteParts) {
+            boolean referredToATime = t.kind() == TimeExpression.Kind.VAGUE
+                    || t.kind() == TimeExpression.Kind.RELATIVE;
+            return referredToATime ? new Resolution.Vague() : new Resolution.Absent();
         }
-        if (t.kind() == TimeExpression.Kind.RELATIVE) {
+        if (hasRelativeParts && !hasAbsoluteParts) {
             return relative(t, now);
         }
-        return absolute(t, now);
+        return absolute(t, now, yearFromUser);
+    }
+
+    /**
+     * True when the user's own text contains a year, so a year in the extraction can be trusted. A four-digit
+     * year anywhere in the request counts, which covers wordings the model may normalise.
+     */
+    public static boolean yearStatedIn(String input, Integer extractedYear) {
+        if (input == null || extractedYear == null) {
+            return false;
+        }
+        return input.contains(Integer.toString(extractedYear)) || YEAR_IN_TEXT.matcher(input).find();
+    }
+
+    private static final java.util.regex.Pattern YEAR_IN_TEXT =
+            java.util.regex.Pattern.compile("(?<!\\d)(?:19|20)\\d{2}(?!\\d)");
+
+    /** An am/pm attached to a clock hour, e.g. "9am", "9 a.m.", "7:30 pm". */
+    private static final java.util.regex.Pattern MERIDIEM_IN_TEXT = java.util.regex.Pattern.compile(
+            "(?<!\\d)\\d{1,2}(?::\\d{2})?\\s*([ap])\\.?m\\.?\\b", java.util.regex.Pattern.CASE_INSENSITIVE);
+
+    /**
+     * The am/pm the user actually wrote next to a clock hour, or null when they wrote none — or wrote both, which
+     * no single hour can satisfy.
+     *
+     * <p>Models drop a stated meridiem often enough that trusting its absence would turn "today at 9am" into the
+     * next 9 o'clock in the evening, when FR-05 requires a past time to be reported as such.
+     */
+    public static TimeExpression.Meridiem meridiemIn(String input) {
+        if (input == null) {
+            return null;
+        }
+        var m = MERIDIEM_IN_TEXT.matcher(input);
+        TimeExpression.Meridiem found = null;
+        while (m.find()) {
+            TimeExpression.Meridiem here = m.group(1).equalsIgnoreCase("a")
+                    ? TimeExpression.Meridiem.AM
+                    : TimeExpression.Meridiem.PM;
+            if (found != null && found != here) {
+                return null;
+            }
+            found = here;
+        }
+        return found;
     }
 
     /** FR-01: "in N minutes/hours/days/weeks" counted from --now. */
@@ -55,7 +115,7 @@ public final class TimeResolver {
         return classify(at, now);
     }
 
-    private static Resolution absolute(TimeExpression t, OffsetDateTime now) {
+    private static Resolution absolute(TimeExpression t, OffsetDateTime now, boolean yearFromUser) {
         // --- the day -------------------------------------------------------------------------------------------
         TimeExpression.DateKind dateKind = t.dateKind() == null ? TimeExpression.DateKind.NONE : t.dateKind();
         LocalDate date;
@@ -73,16 +133,25 @@ public final class TimeResolver {
                     return new Resolution.Vague();
                 }
                 try {
-                    date = explicitDate(t, now);
+                    date = explicitDate(t, now, yearFromUser);
                 } catch (DateTimeException e) {
                     return new Resolution.Invalid("date");
                 }
             }
             default -> {
-                if (!t.hasClockTime()) {
+                if (t.month() != null && t.day() != null) {
+                    // A calendar date was reported even though date_kind says otherwise; the parts decide.
+                    try {
+                        date = explicitDate(t, now, yearFromUser);
+                    } catch (DateTimeException e) {
+                        return new Resolution.Invalid("date");
+                    }
+                    dateKind = TimeExpression.DateKind.EXPLICIT;
+                } else if (!t.hasClockTime()) {
                     return new Resolution.Absent();
+                } else {
+                    date = now.toLocalDate();
                 }
-                date = now.toLocalDate();
             }
         }
 
@@ -114,7 +183,12 @@ public final class TimeResolver {
         }
         // FR-04: the earliest candidate strictly after --now wins.
         OffsetDateTime chosen = earliestAfter(candidates, now);
-        if (chosen == null && dateKind == TimeExpression.DateKind.NONE) {
+        // An ambiguous bare hour labelled "today" is not really pinned to a day: if both readings have already
+        // passed, the user cannot have meant today, and FR-04's next-future-occurrence rule still applies. An hour
+        // with an explicit am/pm has one reading, so it stays a past time (FR-05).
+        boolean dayNotPinned = dateKind == TimeExpression.DateKind.NONE
+                || (dateKind == TimeExpression.DateKind.TODAY && hours.size() > 1);
+        if (chosen == null && dayNotPinned) {
             // No day was given, so a bare hour rolls to the next day rather than being a past time.
             List<OffsetDateTime> tomorrow = new ArrayList<>();
             for (int h : hours) {
@@ -169,9 +243,13 @@ public final class TimeResolver {
         return d;
     }
 
-    /** A stated year is used as given; a missing one resolves to the year that places the date in the future. */
-    private static LocalDate explicitDate(TimeExpression t, OffsetDateTime now) {
-        if (t.year() != null) {
+    /**
+     * A year the user stated is used as given, so "20 November 2023" is still a past time (FR-05). A year the user
+     * never stated is a guess by the model — commonly a training-era year such as 2023 — and is discarded, so a
+     * bare "20 November" resolves to the next future occurrence exactly as a missing year does.
+     */
+    private static LocalDate explicitDate(TimeExpression t, OffsetDateTime now, boolean yearFromUser) {
+        if (t.year() != null && yearFromUser) {
             return LocalDate.of(t.year(), t.month(), t.day());
         }
         LocalDate candidate = LocalDate.of(now.getYear(), t.month(), t.day());

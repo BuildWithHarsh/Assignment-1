@@ -36,4 +36,10 @@ public record TimeExpression(
     public boolean hasClockTime() {
         return hour != null;
     }
+
+    /** The same expression with the meridiem replaced, used to restore an am/pm the model dropped. */
+    public TimeExpression withMeridiem(Meridiem replacement) {
+        return new TimeExpression(kind, relativeAmount, relativeUnit, dateKind, weekday, year, month, day, hour,
+                minute, replacement);
+    }
 }
