@@ -1,7 +1,7 @@
 {
-  "label": "eval-05",
-  "timestamp": "2026-11-21T16:52:25+05:30",
-  "commit": "41689b6",
+  "label": "eval-06",
+  "timestamp": "2026-11-21T17:47:05+05:30",
+  "commit": "0cdc430",
   "official": true,
   "model": {
     "url": "http://localhost:11434",
@@ -31,15 +31,15 @@
   "metrics": {
     "cases": 25,
     "trials": 75,
-    "error_trials": 3,
-    "error_cases": 2,
+    "error_trials": 1,
+    "error_cases": 1,
     "structural_trial_rate": 1.0,
     "invariant_trial_rate_given_L1": 1.0,
     "semantic_trial_rate_given_L2": 1.0,
     "trial_pass_rate": 1.0,
     "overall_case_rate": 1.0,
     "adversarial_case_rate": 1.0,
-    "consistent_cases": 23,
+    "consistent_cases": 24,
     "by_category": {
       "normal": {
         "cases": 6,
@@ -48,8 +48,8 @@
       },
       "boundary": {
         "cases": 5,
-        "passed": 4,
-        "error": 1
+        "passed": 5,
+        "error": 0
       },
       "ambiguous": {
         "cases": 2,
@@ -110,7 +110,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 21.4,
+          "seconds": 22.79,
           "output": {
             "intent": "create",
             "task": "call mom",
@@ -130,7 +130,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 24.33,
+          "seconds": 23.75,
           "output": {
             "intent": "create",
             "task": "call mom",
@@ -150,7 +150,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 24.33,
+          "seconds": 25.56,
           "output": {
             "intent": "create",
             "task": "call mom",
@@ -201,7 +201,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 26.13,
+          "seconds": 29.09,
           "output": {
             "intent": "create",
             "task": "pay the electricity bill",
@@ -221,7 +221,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 25.06,
+          "seconds": 27.59,
           "output": {
             "intent": "create",
             "task": "pay the electricity bill",
@@ -241,7 +241,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 25.18,
+          "seconds": 22.36,
           "output": {
             "intent": "create",
             "task": "pay the electricity bill",
@@ -287,7 +287,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 25.18,
+          "seconds": 25.62,
           "output": {
             "intent": "create",
             "task": "check the oven",
@@ -307,7 +307,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 25.08,
+          "seconds": 19.82,
           "output": {
             "intent": "create",
             "task": "check the oven",
@@ -327,7 +327,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 19.71,
+          "seconds": 24.37,
           "output": {
             "intent": "create",
             "task": "check the oven",
@@ -370,7 +370,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 21.8,
+          "seconds": 20.45,
           "output": {
             "intent": "reschedule",
             "task": null,
@@ -390,7 +390,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 22.95,
+          "seconds": 25.83,
           "output": {
             "intent": "reschedule",
             "task": null,
@@ -410,7 +410,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 24.52,
+          "seconds": 21.02,
           "output": {
             "intent": "reschedule",
             "task": null,
@@ -452,7 +452,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 24.59,
+          "seconds": 25.42,
           "output": {
             "intent": "snooze",
             "task": null,
@@ -472,7 +472,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 19.37,
+          "seconds": 20.16,
           "output": {
             "intent": "snooze",
             "task": null,
@@ -492,7 +492,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 23.64,
+          "seconds": 25.62,
           "output": {
             "intent": "snooze",
             "task": null,
@@ -544,7 +544,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 28.23,
+          "seconds": 29.26,
           "output": {
             "intent": "create",
             "task": "submit the expense report",
@@ -564,7 +564,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 26.1,
+          "seconds": 26.78,
           "output": {
             "intent": "create",
             "task": "submit the expense report",
@@ -584,7 +584,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 25.91,
+          "seconds": 26.7,
           "output": {
             "intent": "create",
             "task": "submit the expense report",
@@ -630,7 +630,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 27.52,
+          "seconds": 29.03,
           "output": {
             "intent": "create",
             "task": "submit the report",
@@ -650,7 +650,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 26.58,
+          "seconds": 22.45,
           "output": {
             "intent": "create",
             "task": "submit the report",
@@ -670,7 +670,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 24.03,
+          "seconds": 27.34,
           "output": {
             "intent": "create",
             "task": "submit the report",
@@ -711,7 +711,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 23.89,
+          "seconds": 21.62,
           "output": {
             "intent": "clarify",
             "task": "take my vitamins",
@@ -733,7 +733,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 24.92,
+          "seconds": 26.01,
           "output": {
             "intent": "clarify",
             "task": "take my vitamins",
@@ -755,7 +755,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 22.99,
+          "seconds": 25.55,
           "output": {
             "intent": "clarify",
             "task": "take my vitamins",
@@ -792,30 +792,28 @@
         ]
       },
       "rubric": "Date without time defaults to 09:00; crosses a month boundary.",
-      "verdict": "ERROR",
-      "passed_trials": 1,
+      "verdict": "PASS",
+      "passed_trials": 3,
       "trials": [
         {
-          "exit": "timeout",
-          "stdout": "",
+          "exit": 0,
+          "stdout": "{\"intent\":\"create\",\"task\":\"renew my passport\",\"target\":null,\"due_at\":\"2026-12-01T09:00:00+05:30\",\"snooze_minutes\":null,\"missing_fields\":[],\"reason_code\":null,\"message\":\"Reminder set: renew my passport on 1 Dec 2026 at 9:00 AM.\"}",
           "stderr": "",
-          "verdict": "ERROR",
+          "verdict": "PASS",
           "L1": [],
           "L2": [],
           "L3": [],
-          "error": "call exceeded 120s",
-          "seconds": 281.24
-        },
-        {
-          "exit": "timeout",
-          "stdout": "",
-          "stderr": "",
-          "verdict": "ERROR",
-          "L1": [],
-          "L2": [],
-          "L3": [],
-          "error": "call exceeded 120s",
-          "seconds": 201.76
+          "seconds": 28.02,
+          "output": {
+            "intent": "create",
+            "task": "renew my passport",
+            "target": null,
+            "due_at": "2026-12-01T09:00:00+05:30",
+            "snooze_minutes": null,
+            "missing_fields": [],
+            "reason_code": null,
+            "message": "Reminder set: renew my passport on 1 Dec 2026 at 9:00 AM."
+          }
         },
         {
           "exit": 0,
@@ -825,7 +823,27 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 20.43,
+          "seconds": 21.25,
+          "output": {
+            "intent": "create",
+            "task": "renew my passport",
+            "target": null,
+            "due_at": "2026-12-01T09:00:00+05:30",
+            "snooze_minutes": null,
+            "missing_fields": [],
+            "reason_code": null,
+            "message": "Reminder set: renew my passport on 1 Dec 2026 at 9:00 AM."
+          }
+        },
+        {
+          "exit": 0,
+          "stdout": "{\"intent\":\"create\",\"task\":\"renew my passport\",\"target\":null,\"due_at\":\"2026-12-01T09:00:00+05:30\",\"snooze_minutes\":null,\"missing_fields\":[],\"reason_code\":null,\"message\":\"Reminder set: renew my passport on 1 Dec 2026 at 9:00 AM.\"}",
+          "stderr": "",
+          "verdict": "PASS",
+          "L1": [],
+          "L2": [],
+          "L3": [],
+          "seconds": 21.97,
           "output": {
             "intent": "create",
             "task": "renew my passport",
@@ -866,7 +884,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 23.27,
+          "seconds": 25.87,
           "output": {
             "intent": "clarify",
             "task": null,
@@ -888,7 +906,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 22.04,
+          "seconds": 19.82,
           "output": {
             "intent": "clarify",
             "task": null,
@@ -910,7 +928,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 25.58,
+          "seconds": 24.67,
           "output": {
             "intent": "clarify",
             "task": null,
@@ -960,7 +978,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 21.96,
+          "seconds": 24.84,
           "output": {
             "intent": "create",
             "task": "call Raj",
@@ -980,7 +998,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 24.4,
+          "seconds": 21.54,
           "output": {
             "intent": "create",
             "task": "call Raj",
@@ -1000,7 +1018,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 23.92,
+          "seconds": 22.93,
           "output": {
             "intent": "create",
             "task": "call Raj",
@@ -1042,7 +1060,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 24.97,
+          "seconds": 23.47,
           "output": {
             "intent": "clarify",
             "task": null,
@@ -1065,7 +1083,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 24.29,
+          "seconds": 25.31,
           "output": {
             "intent": "clarify",
             "task": null,
@@ -1088,7 +1106,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 23.99,
+          "seconds": 24.22,
           "output": {
             "intent": "clarify",
             "task": null,
@@ -1131,7 +1149,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 26.11,
+          "seconds": 23.33,
           "output": {
             "intent": "clarify",
             "task": "call the bank",
@@ -1153,7 +1171,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 21.27,
+          "seconds": 23.78,
           "output": {
             "intent": "clarify",
             "task": "call the bank",
@@ -1175,7 +1193,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 24.48,
+          "seconds": 24.8,
           "output": {
             "intent": "clarify",
             "task": "call the bank",
@@ -1217,7 +1235,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 19.95,
+          "seconds": 25.4,
           "output": {
             "intent": "clarify",
             "task": null,
@@ -1239,7 +1257,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 21.22,
+          "seconds": 25.83,
           "output": {
             "intent": "clarify",
             "task": null,
@@ -1261,7 +1279,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 21.94,
+          "seconds": 22.33,
           "output": {
             "intent": "clarify",
             "task": null,
@@ -1303,7 +1321,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 24.71,
+          "seconds": 25.44,
           "output": {
             "intent": "clarify",
             "task": "book train tickets",
@@ -1325,7 +1343,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 22.8,
+          "seconds": 24.15,
           "output": {
             "intent": "clarify",
             "task": "book train tickets",
@@ -1347,7 +1365,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 25.22,
+          "seconds": 19.46,
           "output": {
             "intent": "clarify",
             "task": "book train tickets",
@@ -1389,7 +1407,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 26.4,
+          "seconds": 21.52,
           "output": {
             "intent": "clarify",
             "task": null,
@@ -1411,7 +1429,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 24.73,
+          "seconds": 24.27,
           "output": {
             "intent": "clarify",
             "task": null,
@@ -1433,7 +1451,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 24.68,
+          "seconds": 24.11,
           "output": {
             "intent": "clarify",
             "task": null,
@@ -1473,7 +1491,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 0.67,
+          "seconds": 0.63,
           "output": {
             "intent": "reject",
             "task": null,
@@ -1493,7 +1511,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 0.64,
+          "seconds": 0.57,
           "output": {
             "intent": "reject",
             "task": null,
@@ -1513,7 +1531,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 0.58,
+          "seconds": 0.57,
           "output": {
             "intent": "reject",
             "task": null,
@@ -1554,7 +1572,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 21.34,
+          "seconds": 25.67,
           "output": {
             "intent": "clarify",
             "task": "feed the cat",
@@ -1576,7 +1594,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 23.13,
+          "seconds": 21.28,
           "output": {
             "intent": "clarify",
             "task": "feed the cat",
@@ -1598,7 +1616,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 22.96,
+          "seconds": 27.61,
           "output": {
             "intent": "clarify",
             "task": "feed the cat",
@@ -1634,50 +1652,6 @@
       "passed_trials": 2,
       "trials": [
         {
-          "exit": 0,
-          "stdout": "{\"intent\":\"clarify\",\"task\":\"drink water\",\"target\":null,\"due_at\":null,\"snooze_minutes\":null,\"missing_fields\":[\"time\"],\"reason_code\":\"INVALID_TIME\",\"message\":\"That date or time does not exist. When should I remind you?\"}",
-          "stderr": "",
-          "verdict": "PASS",
-          "L1": [],
-          "L2": [],
-          "L3": [],
-          "seconds": 26.35,
-          "output": {
-            "intent": "clarify",
-            "task": "drink water",
-            "target": null,
-            "due_at": null,
-            "snooze_minutes": null,
-            "missing_fields": [
-              "time"
-            ],
-            "reason_code": "INVALID_TIME",
-            "message": "That date or time does not exist. When should I remind you?"
-          }
-        },
-        {
-          "exit": 0,
-          "stdout": "{\"intent\":\"clarify\",\"task\":\"drink water\",\"target\":null,\"due_at\":null,\"snooze_minutes\":null,\"missing_fields\":[\"time\"],\"reason_code\":\"INVALID_TIME\",\"message\":\"That date or time does not exist. When should I remind you?\"}",
-          "stderr": "",
-          "verdict": "PASS",
-          "L1": [],
-          "L2": [],
-          "L3": [],
-          "seconds": 24.13,
-          "output": {
-            "intent": "clarify",
-            "task": "drink water",
-            "target": null,
-            "due_at": null,
-            "snooze_minutes": null,
-            "missing_fields": [
-              "time"
-            ],
-            "reason_code": "INVALID_TIME",
-            "message": "That date or time does not exist. When should I remind you?"
-          }
-        },
-        {
           "exit": "timeout",
           "stdout": "",
           "stderr": "",
@@ -1686,7 +1660,51 @@
           "L2": [],
           "L3": [],
           "error": "call exceeded 120s",
-          "seconds": 671.59
+          "seconds": 1707.76
+        },
+        {
+          "exit": 0,
+          "stdout": "{\"intent\":\"clarify\",\"task\":\"drink water\",\"target\":null,\"due_at\":null,\"snooze_minutes\":null,\"missing_fields\":[\"time\"],\"reason_code\":\"INVALID_TIME\",\"message\":\"That date or time does not exist. When should I remind you?\"}",
+          "stderr": "",
+          "verdict": "PASS",
+          "L1": [],
+          "L2": [],
+          "L3": [],
+          "seconds": 22.13,
+          "output": {
+            "intent": "clarify",
+            "task": "drink water",
+            "target": null,
+            "due_at": null,
+            "snooze_minutes": null,
+            "missing_fields": [
+              "time"
+            ],
+            "reason_code": "INVALID_TIME",
+            "message": "That date or time does not exist. When should I remind you?"
+          }
+        },
+        {
+          "exit": 0,
+          "stdout": "{\"intent\":\"clarify\",\"task\":\"drink water\",\"target\":null,\"due_at\":null,\"snooze_minutes\":null,\"missing_fields\":[\"time\"],\"reason_code\":\"INVALID_TIME\",\"message\":\"That date or time does not exist. When should I remind you?\"}",
+          "stderr": "",
+          "verdict": "PASS",
+          "L1": [],
+          "L2": [],
+          "L3": [],
+          "seconds": 19.45,
+          "output": {
+            "intent": "clarify",
+            "task": "drink water",
+            "target": null,
+            "due_at": null,
+            "snooze_minutes": null,
+            "missing_fields": [
+              "time"
+            ],
+            "reason_code": "INVALID_TIME",
+            "message": "That date or time does not exist. When should I remind you?"
+          }
         }
       ]
     },
@@ -1717,7 +1735,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 19.36,
+          "seconds": 24.77,
           "output": {
             "intent": "reject",
             "task": null,
@@ -1737,7 +1755,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 24.06,
+          "seconds": 20.91,
           "output": {
             "intent": "reject",
             "task": null,
@@ -1757,7 +1775,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 21.94,
+          "seconds": 24.87,
           "output": {
             "intent": "reject",
             "task": null,
@@ -1800,7 +1818,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 0.6,
+          "seconds": 0.59,
           "output": {
             "intent": "reject",
             "task": null,
@@ -1820,7 +1838,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 0.52,
+          "seconds": 0.55,
           "output": {
             "intent": "reject",
             "task": null,
@@ -1878,7 +1896,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 26.46,
+          "seconds": 26.18,
           "output": {
             "intent": "reject",
             "task": null,
@@ -1898,7 +1916,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 24.55,
+          "seconds": 21.87,
           "output": {
             "intent": "reject",
             "task": null,
@@ -1918,7 +1936,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 24.65,
+          "seconds": 25.33,
           "output": {
             "intent": "reject",
             "task": null,
@@ -1968,7 +1986,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 29.51,
+          "seconds": 30.48,
           "output": {
             "intent": "create",
             "task": "water the plants",
@@ -1988,7 +2006,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 24.86,
+          "seconds": 26.08,
           "output": {
             "intent": "create",
             "task": "water the plants",
@@ -2008,7 +2026,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 20.89,
+          "seconds": 25.37,
           "output": {
             "intent": "create",
             "task": "water the plants",
@@ -2046,7 +2064,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 0.55,
+          "seconds": 0.47,
           "output": {
             "intent": "reject",
             "task": null,
@@ -2066,7 +2084,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 0.48,
+          "seconds": 0.5,
           "output": {
             "intent": "reject",
             "task": null,
@@ -2086,7 +2104,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 0.52,
+          "seconds": 0.47,
           "output": {
             "intent": "reject",
             "task": null,
@@ -2127,7 +2145,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 0.5,
+          "seconds": 0.44,
           "output": {
             "intent": "reject",
             "task": null,
@@ -2147,7 +2165,7 @@
           "L1": [],
           "L2": [],
           "L3": [],
-          "seconds": 0.48,
+          "seconds": 0.42,
           "output": {
             "intent": "reject",
             "task": null,
