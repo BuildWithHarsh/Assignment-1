@@ -75,6 +75,10 @@ RULES
 3. Never invent a task, a target, a date or a duration the user did not state. Null is the correct answer when
    something was not said.
 4. Return only the schema fields. No prose, no explanation, no reason codes, no user-facing message.
+5. A week- or month-level window is not a date. "sometime next week", "later this month", "in the coming weeks"
+   are kind=vague: leave date_kind=none and year / month / day / hour null. Fill a day only when the user named
+   one ("next week on Tuesday" -> date_kind=weekday, weekday=tuesday). Never pick a day inside a window for the
+   user, and never convert a window into a calendar date.
 
 EXAMPLES
 
@@ -105,6 +109,16 @@ EXAMPLES
 
 "remind me to call mom later"
   action=create, task="call mom", time: kind=vague, date_kind=none, safety=ok
+
+"remind me to book the car service sometime next week"
+  action=create, task="book the car service",
+  time: kind=vague, date_kind=none, year=null, month=null, day=null, hour=null, safety=ok
+  (a week-level window names no day: report it as vague, do not choose a day inside it)
+
+"remind me to book the car service next week on Tuesday"
+  action=create, task="book the car service",
+  time: kind=absolute, date_kind=weekday, weekday=tuesday, hour=null, safety=ok
+  (the user named the day, so it is absolute)
 
 "remind me about the thing tomorrow at 9"
   action=create, task="the thing", task_vague=true,

@@ -101,7 +101,9 @@ public final class Main {
                 time = time.withMeridiem(statedMeridiem);
             }
             boolean yearFromUser = TimeResolver.yearStatedIn(args.input(), time.year());
-            Resolution resolution = TimeResolver.resolve(time, args.now(), yearFromUser);
+            // A day the model picked from inside a week- or month-level window is a guess too, so the user's own
+            // words decide whether any calendar day was actually named (FR-07).
+            Resolution resolution = TimeResolver.resolve(time, args.now(), yearFromUser, args.input());
             Decision decision = DecisionMapper.map(extraction, resolution, args.now());
 
             String json;

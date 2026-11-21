@@ -335,6 +335,101 @@ class TimeResolverTest {
                 parts(Kind.VAGUE, DateKind.NONE, null, null, null, null, null), NOW));
     }
 
+    // --- FR-07 beats FR-03: a window is not a calendar day -------------------------------------------------------
+
+    private static Resolution fromText(TimeExpression t, String input) {
+        return TimeResolver.resolve(t, NOW, false, input);
+    }
+
+    private static String resolvedFromText(TimeExpression t, String input) {
+        Resolution r = fromText(t, input);
+        return assertInstanceOf(Resolution.Resolved.class, r,
+                "expected a resolved instant but got " + r).at().toString();
+    }
+
+    @Test
+    void aWeekLevelWindowStaysVagueEvenWhenTheModelInventsADay() {
+        String request = "remind me to book the car service sometime next week";
+        assertInstanceOf(Resolution.Vague.class,
+                fromText(absolute(DateKind.EXPLICIT, null, null, 11, 20, null, null, null), request),
+                "an invented calendar date inside the window is a guess, not a day the user named");
+        assertInstanceOf(Resolution.Vague.class,
+                fromText(absolute(DateKind.WEEKDAY, Weekday.FRIDAY, null, null, null, null, null, null), request),
+                "an invented weekday inside the window is a guess too");
+    }
+
+    @Test
+    void monthLevelAndUnanchoredWindowsAreVagueToo() {
+        assertInstanceOf(Resolution.Vague.class, fromText(
+                absolute(DateKind.EXPLICIT, null, null, 12, 3, null, null, null),
+                "remind me to top up the metro card next month"));
+        assertInstanceOf(Resolution.Vague.class, fromText(
+                absolute(DateKind.EXPLICIT, null, null, 11, 19, null, null, null),
+                "ping me about the electricity bill later this week"));
+        assertInstanceOf(Resolution.Vague.class, fromText(
+                absolute(DateKind.TOMORROW, null, null, null, null, null, null, null),
+                "remind me to clean the fish tank soon"));
+        assertInstanceOf(Resolution.Vague.class, fromText(
+                absolute(DateKind.EXPLICIT, null, null, 11, 25, null, null, null),
+                "remind me to chase the landlord in the coming weeks"));
+        assertInstanceOf(Resolution.Vague.class, fromText(
+                absolute(DateKind.WEEKDAY, Weekday.WEDNESDAY, null, null, null, null, null, null),
+                "remind me to sort the garage out at some point"));
+    }
+
+    @Test
+    void aClockTimeInsideAWindowStillNamesNoDay() {
+        assertInstanceOf(Resolution.Vague.class, fromText(
+                absolute(DateKind.EXPLICIT, null, null, 11, 20, 3, null, Meridiem.PM),
+                "remind me to collect the parcel next week at 3pm"));
+    }
+
+    @Test
+    void aDayNamedInsideAWindowStillResolves() {
+        assertEquals("2026-11-17T09:00+05:30", resolvedFromText(
+                absolute(DateKind.WEEKDAY, Weekday.TUESDAY, null, null, null, null, null, null),
+                "remind me to book the car service next week on Tuesday"));
+        assertEquals("2026-12-01T09:00+05:30", resolvedFromText(
+                absolute(DateKind.EXPLICIT, null, null, 12, 1, null, null, null),
+                "remind me to pay the rent on the 1st of next month"));
+        assertEquals("2026-11-14T12:00+05:30", resolvedFromText(
+                absolute(DateKind.NONE, null, null, null, null, 12, null, null),
+                "remind me to eat something later today at 12"));
+        assertEquals("2026-11-14T12:00+05:30", resolvedFromText(relative(2, Unit.HOUR),
+                "remind me to stretch soon, in 2 hours"));
+        assertEquals("2026-12-09T09:00+05:30", resolvedFromText(
+                absolute(DateKind.EXPLICIT, null, null, 12, 9, null, null, null),
+                "remind me to renew the gym membership on 9 December"));
+    }
+
+    @Test
+    void windowOnlyInReadsTheUsersOwnWords() {
+        assertTrue(TimeResolver.windowOnlyIn("remind me to book the car service sometime next week"));
+        assertTrue(TimeResolver.windowOnlyIn("remind me to file the insurance claim later this month"));
+        assertTrue(TimeResolver.windowOnlyIn("remind me to call the plumber at some point"));
+        assertTrue(TimeResolver.windowOnlyIn("move the standup reminder to sometime next week"));
+        assertFalse(TimeResolver.windowOnlyIn("remind me to call the plumber tomorrow at 9am"));
+        assertFalse(TimeResolver.windowOnlyIn("remind me to submit the form on 12 March"));
+        assertFalse(TimeResolver.windowOnlyIn("remind me in 45 minutes to take the bread out"));
+        assertFalse(TimeResolver.windowOnlyIn("remind me to join the call at 7"));
+        assertFalse(TimeResolver.windowOnlyIn("remind me to water the plants next Tuesday"));
+        assertFalse(TimeResolver.windowOnlyIn(""));
+        assertFalse(TimeResolver.windowOnlyIn(null));
+    }
+
+    @Test
+    void theWindowRuleLeavesEveryOtherResolutionAlone() {
+        // No window in the text, so the parts decide exactly as before.
+        assertEquals("2026-11-15T15:00+05:30", resolvedFromText(
+                absolute(DateKind.TOMORROW, null, null, null, null, 3, null, Meridiem.PM),
+                "remind me to call the dentist tomorrow at 3pm"));
+        assertInstanceOf(Resolution.Invalid.class, fromText(
+                absolute(DateKind.EXPLICIT, null, null, 11, 31, null, null, null),
+                "remind me about the dentist on 31 November"), "FR-06 still reports an impossible date");
+        assertInstanceOf(Resolution.Absent.class, fromText(TimeExpression.none(),
+                "remind me to buy milk"));
+    }
+
     @Test
     void incompletePartsAreVagueRatherThanGuessed() {
         assertInstanceOf(Resolution.Vague.class, TimeResolver.resolve(

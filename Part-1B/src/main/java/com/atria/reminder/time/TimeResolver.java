@@ -28,6 +28,70 @@ public final class TimeResolver {
     }
 
     /**
+     * Resolves against the user's own words as well as the model's parts.
+     *
+     * <p>FR-03's 09:00 default turns a <em>calendar day</em> into an instant. A week- or month-level window is not
+     * a calendar day, so when the user's text names only such a window, the day parts the model filled in are its
+     * guess at which day inside the window was meant, and the time is vague however confident those parts look
+     * (FR-07, constitution IV). Decided from the user's text rather than from {@link TimeExpression#kind()},
+     * because the label is the model's and the text is not.
+     *
+     * @param userInput the request exactly as the person wrote it, or null to resolve from the parts alone.
+     */
+    public static Resolution resolve(TimeExpression t, OffsetDateTime now, boolean yearFromUser, String userInput) {
+        if (windowOnlyIn(userInput)) {
+            return new Resolution.Vague();
+        }
+        return resolve(t, now, yearFromUser);
+    }
+
+    /**
+     * True when the user's own text pins the request to a window wider than a day — a week- or month-level window,
+     * or a wholly unanchored one — and names no calendar day inside it.
+     *
+     * <p>Any day marker in the text cancels the window, because a day inside a window is still one day. A clock
+     * time does not cancel it: a week-level window with an hour attached still never says which day.
+     */
+    public static boolean windowOnlyIn(String input) {
+        if (input == null || input.isBlank()) {
+            return false;
+        }
+        if (DAY_PINNED_IN_TEXT.matcher(input).find()) {
+            return false;
+        }
+        return WINDOW_IN_TEXT.matcher(input).find();
+    }
+
+    private static final String MONTH_NAME = "(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*";
+
+    /** A window wider than one calendar day: week-level, month-level or wholly unanchored. */
+    private static final java.util.regex.Pattern WINDOW_IN_TEXT = java.util.regex.Pattern.compile(
+            "\\b(?:next|this|coming|the\\s+coming|following|upcoming)\\s+"
+                    + "(?:week|month|quarter|year|fortnight)s?\\b"
+            + "|\\bin\\s+(?:the\\s+)?(?:next|coming|following)\\s+(?:few\\s+|couple\\s+of\\s+)?"
+                    + "(?:days|weeks|months|years)\\b"
+            + "|\\b(?:sometime|some\\s+time|someday|some\\s+day|soon|later|eventually|whenever"
+                    + "|at\\s+some\\s+point|one\\s+of\\s+these\\s+days|in\\s+the\\s+future|in\\s+due\\s+course"
+                    + "|when\\s+i\\s+(?:get|have)\\s+(?:a\\s+chance|time|the\\s+time))\\b",
+            java.util.regex.Pattern.CASE_INSENSITIVE);
+
+    /** A specific calendar day, or a counted offset from now, somewhere in the user's text. */
+    private static final java.util.regex.Pattern DAY_PINNED_IN_TEXT = java.util.regex.Pattern.compile(
+            "\\b(?:today|tonight|tomorrow|tmr|tmrw|day\\s+after\\s+tomorrow"
+                    + "|this\\s+(?:morning|afternoon|evening|night)"
+                    + "|monday|tuesday|wednesday|thursday|friday|saturday|sunday"
+                    + "|mon|tue|tues|wed|weds|thu|thur|thurs|fri)\\b"
+            + "|\\b\\d{1,2}\\s*(?:st|nd|rd|th)\\b"
+            + "|\\b\\d{4}-\\d{1,2}-\\d{1,2}\\b"
+            + "|\\b\\d{1,2}\\s*[/-]\\s*\\d{1,2}\\b"
+            + "|\\b\\d{1,2}\\s*(?:st|nd|rd|th)?\\s+(?:of\\s+)?" + MONTH_NAME + "\\b"
+            + "|\\b" + MONTH_NAME + "\\s+\\d{1,2}\\b"
+            + "|\\bin\\s+(?:\\d+|a|an|one|two|three|four|five|six|seven|eight|nine|ten|half\\s+an?)\\s+"
+                    + "(?:and\\s+a\\s+half\\s+)?(?:min|mins|minute|minutes|hr|hrs|hour|hours|day|days"
+                    + "|week|weeks|month|months)\\b",
+            java.util.regex.Pattern.CASE_INSENSITIVE);
+
+    /**
      * @param yearFromUser whether the user's own text contained a year. A year the user never said is a guess by
      *                     the model, so it is discarded and re-derived rather than trusted (constitution IV).
      */
